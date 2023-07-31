@@ -8,7 +8,10 @@ namespace MFarm.Inventory
     public class ItemManager : MonoBehaviour
     {
         public Item itemPrefab;
+        public Item bounceItemPrefab;
         private Transform itemParent;
+
+        private Transform playerTransform => FindObjectOfType<Player>().transform;
 
         // 记录场景Item
         private Dictionary<string, List<SceneItem>> sceneItemDict = new Dictionary<string, List<SceneItem>>();
@@ -44,11 +47,13 @@ namespace MFarm.Inventory
         /// 扔出物品
         /// </summary>
         /// <param name="ID">物品ID</param>
-        /// <param name="pos">物品扔出坐标</param>
-        private void OnDropItemEvent(int ID, Vector3 pos)
+        /// <param name="mousePos">物品扔出坐标</param>
+        private void OnDropItemEvent(int ID, Vector3 mousePos)
         {
-            var item = Instantiate(itemPrefab, pos, Quaternion.identity, itemParent);
+            var item = Instantiate(bounceItemPrefab, playerTransform.position, Quaternion.identity, itemParent);    // 扔出物品时则替换ItemPrefab为BounceItemPrefab
             item.itemID = ID;
+            var dir = (mousePos - playerTransform.position).normalized;
+            item.GetComponent<ItemBounce>().InitBounceItem(mousePos, dir);
         }
 
         /// <summary>
