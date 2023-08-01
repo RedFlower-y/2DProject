@@ -694,7 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cafd0f4bb408978488915bb00947e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startSceneName: 02.Home
+  startSceneName: 01.Field
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +879,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd38a2bec2423a6448a798b9d059cdbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  digTile: {fileID: 11400000, guid: 71d65cd0eec1ed141a89fde87dd5b027, type: 2}
+  waterTile: {fileID: 11400000, guid: eca063d31a8d937428c3039530a13615, type: 2}
   mapDataList:
   - {fileID: 11400000, guid: 7bc0a29197d72174d9859fed31cc0931, type: 2}
 --- !u!1 &1126333929

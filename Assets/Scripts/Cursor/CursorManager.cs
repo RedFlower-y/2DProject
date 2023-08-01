@@ -139,15 +139,15 @@ public class CursorManager : MonoBehaviour
             // WORKFLOW:添加所有类型对应图片
             currentSprite = itemDetails.itemType switch
             {
-                ItemType.Seed => seed,
-                ItemType.Commodity => item,
-                ItemType.ChopTool => tool,
-                ItemType.HoeTool => tool,
-                ItemType.WaterTool => tool,
-                ItemType.BreakTool => tool,
-                ItemType.ReapTool => tool,
-                ItemType.Furniture => tool,
-                _ => normal,
+                ItemType.Seed       => seed,
+                ItemType.Commodity  => item,
+                ItemType.ChopTool   => tool,
+                ItemType.HoeTool    => tool,
+                ItemType.WaterTool  => tool,
+                ItemType.BreakTool  => tool,
+                ItemType.ReapTool   => tool,
+                ItemType.Furniture  => tool,
+                _                   => normal,
             };
 
             cursorEnable = true;
@@ -182,6 +182,21 @@ public class CursorManager : MonoBehaviour
                     else
                         SetCursorInvalid();
                     break;
+
+                case ItemType.HoeTool:
+                    if (currentTile.canDig) 
+                        SetCursorValid(); 
+                    else 
+                        SetCursorInvalid();
+                    break;
+
+                case ItemType.WaterTool:
+                    if (currentTile.daySinceDug > -1 && currentTile.daySinceWatered == -1)
+                        SetCursorValid();
+                    else
+                        SetCursorInvalid();
+                    break;
+
             }
         }
         else

@@ -95,7 +95,7 @@ public class TileDetails
     public bool canDropItem;
     public bool canPlaceFurniture;
     public bool isNPCObstacle;
-    public int  daySinceDig = -1;            // 记录挖土时间
+    public int  daySinceDug = -1;            // 记录挖土时间
     public int  daySinceWatered = -1;        // 记录浇水时间
     public int  seedItemID = -1;             // 记录瓦片地图里的种子编号
     public int  growthDays = -1;             // 记录种子生长时间
