@@ -42,6 +42,7 @@ public enum PartType
     Carry,
     Hoe,
     Break,
+    Water,
 }
 
 /// <summary>

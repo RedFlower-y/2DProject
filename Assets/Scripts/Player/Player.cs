@@ -13,6 +13,11 @@ public class Player : MonoBehaviour
     private bool isMoving;
     private bool inputDisable;      // 是否能操控
 
+    // 动画使用工具
+    private float mouseX;
+    private float mouseY;
+    private bool useTool;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,24 +27,61 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
-        EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
-        EventHandler.MoveToPosition += OnMoveToPosition;
-        EventHandler.MouseClickedEvent += OnMouseClickedEvent;
+        EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+        EventHandler.MoveToPosition         += OnMoveToPosition;
+        EventHandler.MouseClickedEvent      += OnMouseClickedEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
-        EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
-        EventHandler.MoveToPosition -= OnMoveToPosition;
-        EventHandler.MouseClickedEvent -= OnMouseClickedEvent;
+        EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+        EventHandler.MoveToPosition         -= OnMoveToPosition;
+        EventHandler.MouseClickedEvent      -= OnMouseClickedEvent;
     }
 
-    private void OnMouseClickedEvent(Vector3 pos, ItemDetails itemDetails)
+    private void OnMouseClickedEvent(Vector3 mouseWorldPos, ItemDetails itemDetails)
     {
         // 执行动作时的动画
-        EventHandler.CallExecuteActionAfterAnimationEvent(pos, itemDetails);
+        if(itemDetails.itemType != ItemType.Seed && itemDetails.itemType != ItemType.Commodity && itemDetails.itemType != ItemType.Furniture)
+        {
+            mouseX = mouseWorldPos.x - transform.position.x;
+            mouseY = mouseWorldPos.y - transform.position.y;
+
+            if (Mathf.Abs(mouseX) > Mathf.Abs(mouseY))
+                mouseY = 0;     // X轴的偏移大于Y轴的偏移，则判断左右
+            else
+                mouseX = 0;     // Y轴的偏移大于X轴的偏移，则判断上下
+
+            StartCoroutine(UseToolRoutine(mouseWorldPos, itemDetails));
+        }
+        else
+        {
+            EventHandler.CallExecuteActionAfterAnimationEvent(mouseWorldPos, itemDetails);
+        }     
     }
+
+    private IEnumerator UseToolRoutine(Vector3 mouseWorldPos,ItemDetails itemDetails)
+    {
+        useTool = true;
+        inputDisable = true;
+        yield return null;
+        foreach(var anim in animators)
+        {
+            anim.SetTrigger("useTool");
+
+            // 人物的面朝方向
+            anim.SetFloat("inputX", mouseX);
+            anim.SetFloat("inputY", mouseY);
+        }
+        yield return new WaitForSeconds(0.45f);         // 取决于动画的帧率
+        EventHandler.CallExecuteActionAfterAnimationEvent(mouseWorldPos, itemDetails);
+        yield return new WaitForSeconds(0.25f);
+
+        useTool = false;
+        inputDisable = false;
+    }
+
 
     private void OnMoveToPosition(Vector3 targetPosition)
     {
@@ -104,6 +146,9 @@ public class Player : MonoBehaviour
         foreach ( var anim in animators )
         {
             anim.SetBool("IsMoving", isMoving);
+            anim.SetFloat("mouseY", mouseY);
+            anim.SetFloat("mouseX", mouseX);
+
             if(isMoving)
             {
                 anim.SetFloat("InputX", inputX);
