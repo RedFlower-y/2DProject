@@ -19,13 +19,14 @@ namespace MFarm.Map
         public List<MapData_SO> mapDataList;
 
         private Dictionary<string, TileDetails> tileDetailsDict = new Dictionary<string, TileDetails>();    // 场景名字+坐标和对应的瓦片信息
-
         private Grid currentGrid;
+        private Season currentSeason;
 
         private void OnEnable()
         {
             EventHandler.ExecuteActionAfterAnimationEvent   += OnExecuteActionAfterAnimationEvent;
             EventHandler.AfterSceneLoadedEvent              += OnAfterSceneLoadedEvent;
+            EventHandler.GameDayEvent                       += OnGameDayEvent;
         }
 
 
@@ -33,9 +34,9 @@ namespace MFarm.Map
         {
             EventHandler.ExecuteActionAfterAnimationEvent   -= OnExecuteActionAfterAnimationEvent;
             EventHandler.AfterSceneLoadedEvent              -= OnAfterSceneLoadedEvent;
+            EventHandler.GameDayEvent                       -= OnGameDayEvent;
         }
 
-       
 
         private void Start()
         {
@@ -49,6 +50,28 @@ namespace MFarm.Map
 
             digTilemap      = GameObject.FindWithTag("Dig").GetComponent<Tilemap>();
             waterTilemap    = GameObject.FindWithTag("Water").GetComponent<Tilemap>();
+
+            //DisplayMap(SceneManager.GetActiveScene().name);
+            RefreshMap();
+        }
+
+        private void OnGameDayEvent(int gameDay, Season gameSeason)
+        {
+            currentSeason = gameSeason;
+
+            foreach(var tile in tileDetailsDict)
+            {
+                if (tile.Value.daySinceWatered > -1)
+                    tile.Value.daySinceWatered = -1;
+                if (tile.Value.daySinceDug > -1)
+                    tile.Value.daySinceDug++;
+                if (tile.Value.daySinceDug > 5 && tile.Value.seedItemID == -1)  // 超期消除挖坑
+                { 
+                    tile.Value.daySinceDug = -1;
+                    tile.Value.canDig = true;
+                }
+            }
+            RefreshMap();
         }
 
         /// <summary>
@@ -151,6 +174,8 @@ namespace MFarm.Map
                         // 音效
                         break;
                 }
+
+                UpdateTileDetails(currentTile);         // 更新字典
             }
         }
 
@@ -175,6 +200,55 @@ namespace MFarm.Map
             Vector3Int pos = new Vector3Int(tile.gridX, tile.gridY, 0);
             if (waterTilemap != null)
                 waterTilemap.SetTile(pos, waterTile);
+        }
+
+
+        /// <summary>
+        /// 执行实际工具或物品功能后，更新瓦片字典
+        /// </summary>
+        /// <param name="tileDetails"></param>
+        private void UpdateTileDetails(TileDetails tileDetails)
+        {
+            string key = tileDetails.gridX + "x" + tileDetails.gridY + "y" + SceneManager.GetActiveScene().name;
+            if(tileDetailsDict.ContainsKey(key))
+            {
+                tileDetailsDict[key] = tileDetails;
+            }
+        }
+
+        /// <summary>
+        /// 刷新当前地图，日期相关
+        /// </summary>
+        private void RefreshMap()
+        {
+            if (digTilemap != null)
+                digTilemap.ClearAllTiles();
+            if (waterTilemap != null)
+                waterTilemap.ClearAllTiles();
+
+            DisplayMap(SceneManager.GetActiveScene().name);
+        }
+
+        /// <summary>
+        /// 显示地图瓦片
+        /// </summary>
+        /// <param name="sceneName">场景名称</param>
+        private void DisplayMap(string sceneName)
+        {
+            foreach(var tile in tileDetailsDict)
+            {
+                var key = tile.Key;
+                var tileDetails = tile.Value;
+
+                if(key.Contains(sceneName))
+                {
+                    if(tileDetails.daySinceDug > -1)
+                        SetDigGround(tileDetails);
+                    if(tileDetails.daySinceWatered > -1)
+                        SetWaterGround(tileDetails);
+                    // TODO：种子
+                }
+            }
         }
     }
 }

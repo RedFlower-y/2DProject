@@ -71,8 +71,8 @@ public class Player : MonoBehaviour
             anim.SetTrigger("useTool");
 
             // 人物的面朝方向
-            anim.SetFloat("inputX", mouseX);
-            anim.SetFloat("inputY", mouseY);
+            anim.SetFloat("InputX", mouseX);
+            anim.SetFloat("InputY", mouseY);
         }
         yield return new WaitForSeconds(0.45f);         // 取决于动画的帧率
         EventHandler.CallExecuteActionAfterAnimationEvent(mouseWorldPos, itemDetails);

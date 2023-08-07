@@ -56,6 +56,16 @@ public static class EventHandler
         GameMinuteEvent?.Invoke(minute, hour);
     }
 
+    public static event Action<int, Season> GameDayEvent;
+    /// <summary>
+    /// 日子时间，刷新地图和农作物
+    /// </summary>
+    /// <param name="day"></param>
+    /// <param name="season"></param>
+    public static void CallGameDayEvent(int day,Season season)
+    {
+        GameDayEvent?.Invoke(day, season);
+    }
     
     public static event Action<int, int, int, int, Season> GameDateEvent;
     /// <summary>
