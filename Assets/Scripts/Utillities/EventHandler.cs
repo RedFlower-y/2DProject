@@ -135,4 +135,15 @@ public static class EventHandler
     {
         ExecuteActionAfterAnimationEvent?.Invoke(pos, itemDetails);
     }
+
+    public static event Action<int, TileDetails> PlantSeedEvent;
+    /// <summary>
+    /// 播种事件
+    /// </summary>
+    /// <param name="ID">种子ID</param>
+    /// <param name="tile">瓦片属性</param>
+    public static void CallPlantSeedEvent(int ID,TileDetails tile)
+    {
+        PlantSeedEvent?.Invoke(ID, tile);
+    }
 }
