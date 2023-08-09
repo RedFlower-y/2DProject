@@ -23,15 +23,16 @@ public static class EventHandler
     }
 
 
-    public static event Action<int, Vector3> DropItemEvent;
+    public static event Action<int, Vector3, ItemType> DropItemEvent;
     /// <summary>
     /// 扔出物品
     /// </summary>
     /// <param name="ID">物品ID</param>
     /// <param name="pos">物品扔出坐标</param>
-    public static void CallDropItemEvent(int ID,Vector3 pos)
+    /// <param name="itemType">扔出物品类型</param>
+    public static void CallDropItemEvent(int ID,Vector3 pos,ItemType itemType)
     {
-        DropItemEvent?.Invoke(ID, pos);
+        DropItemEvent?.Invoke(ID, pos, itemType);
     }
 
     

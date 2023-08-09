@@ -48,8 +48,12 @@ namespace MFarm.Inventory
         /// </summary>
         /// <param name="ID">物品ID</param>
         /// <param name="mousePos">物品扔出坐标</param>
-        private void OnDropItemEvent(int ID, Vector3 mousePos)
+        /// <param name="itemType">扔出物品类型</param>
+        private void OnDropItemEvent(int ID, Vector3 mousePos, ItemType itemType)
         {
+            // 如果扔出来的是种子，则不执行后面的生成物体了
+            if (itemType == ItemType.Seed) return;
+
             var item = Instantiate(bounceItemPrefab, playerTransform.position, Quaternion.identity, itemParent);    // 扔出物品时则替换ItemPrefab为BounceItemPrefab
             item.itemID = ID;
             var dir = (mousePos - playerTransform.position).normalized;
