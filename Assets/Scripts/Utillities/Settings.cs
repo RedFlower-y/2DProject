@@ -18,4 +18,7 @@ public class Settings
 
     // Transition
     public const float fadeDuration = 1.5f;
+
+    // 收割农作物相关
+    public const float waitTimeForHarvest = 1.0f;
 }

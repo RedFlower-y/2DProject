@@ -182,39 +182,30 @@ public class CursorManager : MonoBehaviour
             switch(currentItem.itemType)
             {
                 case ItemType.Seed:
-                    if (currentTile.daySinceDug > -1 && currentTile.seedItemID == -1)
-                        SetCursorValid();
-                    else
-                        SetCursorInvalid();
+                    if (currentTile.daySinceDug > -1 && currentTile.seedItemID == -1) SetCursorValid(); else SetCursorInvalid();
                     break;
+
                 case ItemType.Commodity:
-                    if (currentTile.canDropItem && currentItem.canDropped)
-                        SetCursorValid();
-                    else
-                        SetCursorInvalid();
+                    if (currentTile.canDropItem && currentItem.canDropped) SetCursorValid(); else SetCursorInvalid(); 
                     break;
 
                 case ItemType.HoeTool:
-                    if (currentTile.canDig) 
-                        SetCursorValid(); 
-                    else 
-                        SetCursorInvalid();
+                    if (currentTile.canDig) SetCursorValid(); else SetCursorInvalid();
                     break;
 
                 case ItemType.WaterTool:
-                    if (currentTile.daySinceDug > -1 && currentTile.daySinceWatered == -1)
-                        SetCursorValid();
-                    else
-                        SetCursorInvalid();
+                    if (currentTile.daySinceDug > -1 && currentTile.daySinceWatered == -1) SetCursorValid(); else SetCursorInvalid();
                     break;
 
                 case ItemType.CollectTool:
                     if(currentCrop != null)
                     {
-                        if (currentTile.growthDays >= currentCrop.TotalGrowthDays)
-                            SetCursorValid();
-                        else
-                            SetCursorInvalid();
+                        // 当前农作物为不为空
+                        if (currentCrop.CheckToolAvailable(currentItem.itemID))
+                        {
+                            // 且工具可用
+                            if (currentTile.growthDays >= currentCrop.TotalGrowthDays) SetCursorValid(); else SetCursorInvalid();
+                        }
                     }
                     else
                     {

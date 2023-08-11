@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MFarm.Inventory;
 
 public class AnimatorOverride : MonoBehaviour
 {
@@ -24,14 +25,39 @@ public class AnimatorOverride : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.ItemSelectedEvent      += OnItemSelectedEvent;
-        EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
+        EventHandler.ItemSelectedEvent          += OnItemSelectedEvent;
+        EventHandler.BeforeSceneUnloadEvent     += OnBeforeSceneUnloadEvent;
+        EventHandler.HarvestAtPlayerPosition    += OnHarvestAtPlayerPosition;
     }
 
     private void OnDisable()
     {
-        EventHandler.ItemSelectedEvent      -= OnItemSelectedEvent;
-        EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
+        EventHandler.ItemSelectedEvent          -= OnItemSelectedEvent;
+        EventHandler.BeforeSceneUnloadEvent     -= OnBeforeSceneUnloadEvent;
+        EventHandler.HarvestAtPlayerPosition    -= OnHarvestAtPlayerPosition;
+    }
+
+    private void OnHarvestAtPlayerPosition(int ID)
+    {
+        Sprite itemSprite = InventoryManager.Instance.GetItemDetails(ID).itemOnWorldSprite;
+        if(holdItem.enabled == false)
+        {
+            // 避免连续获取果实时的 协程问题（还在上一个协程中就启动下一个协程）
+            StartCoroutine(ShowItem(itemSprite));
+        }
+    }
+
+    /// <summary>
+    ///  展示获取的果实
+    /// </summary>
+    /// <param name="itemSprite">果实图片</param>
+    /// <returns></returns>
+    private IEnumerator ShowItem(Sprite itemSprite)
+    {
+        holdItem.sprite = itemSprite;
+        holdItem.enabled = true;
+        yield return new WaitForSeconds(Settings.waitTimeForHarvest);
+        holdItem.enabled = false;
     }
 
     /// <summary>

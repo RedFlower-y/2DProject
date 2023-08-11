@@ -186,9 +186,10 @@ namespace MFarm.Map
                         break;
                     case ItemType.CollectTool:
                         Crop currentCrop = GetCropObject(mouseWorldPos);
-                        //if (currentCrop != null)
-                        //    Debug.Log(currentCrop.cropDetails.seedItemID);
+
                         // 执行收割方法
+                        currentCrop.ProcessToolAction(itemDetails);
+
                         break;
                 }
 

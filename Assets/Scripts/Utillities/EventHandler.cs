@@ -147,4 +147,14 @@ public static class EventHandler
     {
         PlantSeedEvent?.Invoke(seedID, tileDetails);
     }
+
+    public static event Action<int> HarvestAtPlayerPosition;
+    /// <summary>
+    /// 在玩家位置生成果实
+    /// </summary>
+    /// <param name="ID"></param>
+    public static void CallHarvestAtPlayerPosition(int ID)
+    {
+        HarvestAtPlayerPosition?.Invoke(ID);
+    }
 }
