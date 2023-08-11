@@ -43,6 +43,7 @@ public enum PartType
     Hoe,
     Break,
     Water,
+    Collect,
 }
 
 /// <summary>

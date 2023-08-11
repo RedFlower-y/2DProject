@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using MFarm.Map;
+using MFarm.CropPlant;
 
 public class CursorManager : MonoBehaviour
 {
@@ -139,15 +140,16 @@ public class CursorManager : MonoBehaviour
             // WORKFLOW:添加所有类型对应图片
             currentSprite = itemDetails.itemType switch
             {
-                ItemType.Seed       => seed,
-                ItemType.Commodity  => item,
-                ItemType.ChopTool   => tool,
-                ItemType.HoeTool    => tool,
-                ItemType.WaterTool  => tool,
-                ItemType.BreakTool  => tool,
-                ItemType.ReapTool   => tool,
-                ItemType.Furniture  => tool,
-                _                   => normal,
+                ItemType.Seed           => seed,
+                ItemType.Commodity      => item,
+                ItemType.ChopTool       => tool,
+                ItemType.HoeTool        => tool,
+                ItemType.WaterTool      => tool,
+                ItemType.BreakTool      => tool,
+                ItemType.ReapTool       => tool,
+                ItemType.Furniture      => tool,
+                ItemType.CollectTool    => tool,
+                _                       => normal,
             };
 
             cursorEnable = true;
@@ -174,6 +176,9 @@ public class CursorManager : MonoBehaviour
         TileDetails currentTile = GridMapManager.Instance.GetTileDetailsOnMousePosition(mouseGridPos);
         if(currentTile != null)
         {
+            CropDetails currentCrop = CropManager.Instance.GetCropDetails(currentTile.seedItemID);
+
+            // WORKFLOW:不充所有物品类型的判断
             switch(currentItem.itemType)
             {
                 case ItemType.Seed:
@@ -201,6 +206,20 @@ public class CursorManager : MonoBehaviour
                         SetCursorValid();
                     else
                         SetCursorInvalid();
+                    break;
+
+                case ItemType.CollectTool:
+                    if(currentCrop != null)
+                    {
+                        if (currentTile.growthDays >= currentCrop.TotalGrowthDays)
+                            SetCursorValid();
+                        else
+                            SetCursorInvalid();
+                    }
+                    else
+                    {
+                        SetCursorInvalid();
+                    }
                     break;
 
             }

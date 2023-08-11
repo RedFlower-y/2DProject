@@ -184,10 +184,34 @@ namespace MFarm.Map
                         currentTile.daySinceWatered = 0;
                         // 音效
                         break;
+                    case ItemType.CollectTool:
+                        Crop currentCrop = GetCropObject(mouseWorldPos);
+                        //if (currentCrop != null)
+                        //    Debug.Log(currentCrop.cropDetails.seedItemID);
+                        // 执行收割方法
+                        break;
                 }
 
                 UpdateTileDetails(currentTile);         // 更新字典
             }
+        }
+
+        /// <summary>
+        /// 通过物理方法判断鼠标点击位置的农作物
+        /// </summary>
+        /// <param name="mouseWorldPos">鼠标坐标</param>
+        /// <returns>农作物信息</returns>
+        private Crop GetCropObject(Vector3 mouseWorldPos)
+        {
+            Collider2D[] colliders = Physics2D.OverlapPointAll(mouseWorldPos);
+            Crop currentCrop = null;
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].GetComponent<Crop>())
+                    currentCrop = colliders[i].GetComponent<Crop>();
+            }
+            return currentCrop;
         }
 
 

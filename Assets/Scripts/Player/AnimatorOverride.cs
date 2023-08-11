@@ -24,13 +24,13 @@ public class AnimatorOverride : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.ItemSelectedEvent += OnItemSelectedEvent;
+        EventHandler.ItemSelectedEvent      += OnItemSelectedEvent;
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
     }
 
     private void OnDisable()
     {
-        EventHandler.ItemSelectedEvent -= OnItemSelectedEvent;
+        EventHandler.ItemSelectedEvent      -= OnItemSelectedEvent;
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
     }
 
@@ -53,6 +53,7 @@ public class AnimatorOverride : MonoBehaviour
             ItemType.Commodity  => PartType.Carry,
             ItemType.HoeTool    => PartType.Hoe,
             ItemType.WaterTool  => PartType.Water,
+            ItemType.CollectTool=> PartType.Collect,
             _                   => PartType.None,
         };
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MFarm.CropPlant
 {
-    public class CropManager : MonoBehaviour
+    public class CropManager : Singloten<CropManager>
     {
         public CropDataList_SO cropData;
         private Transform cropParent;
@@ -83,8 +83,12 @@ namespace MFarm.CropPlant
             // 获取农作物的位置
             Vector3 pos = new Vector3(tileDetails.gridX + 0.5f, tileDetails.gridY + 0.5f, 0);
 
+            // 生成农作物
             GameObject cropInstance = Instantiate(cropPrefab, pos, Quaternion.identity, cropParent);        // 实例化
             cropInstance.GetComponentInChildren<SpriteRenderer>().sprite = cropSprite;                      // 显示图片
+
+            // 将农作物信息传递给挂载代码
+            cropInstance.GetComponent<Crop>().cropDetails = cropDetails;
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace MFarm.CropPlant
         /// </summary>
         /// <param name="itemID">物品ID</param>
         /// <returns>种子信息</returns>
-        private CropDetails GetCropDetails(int itemID)
+        public CropDetails GetCropDetails(int itemID)
         {
             return cropData.cropDetailsList.Find(c => c.seedItemID == itemID);
         }

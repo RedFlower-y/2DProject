@@ -143,8 +143,8 @@ public static class EventHandler
     /// </summary>
     /// <param name="ID">÷÷◊”ID</param>
     /// <param name="tile">Õﬂ∆¨ Ù–‘</param>
-    public static void CallPlantSeedEvent(int ID,TileDetails tile)
+    public static void CallPlantSeedEvent(int seedID,TileDetails tileDetails)
     {
-        PlantSeedEvent?.Invoke(ID, tile);
+        PlantSeedEvent?.Invoke(seedID, tileDetails);
     }
 }
