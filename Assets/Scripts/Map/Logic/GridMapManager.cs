@@ -164,6 +164,8 @@ namespace MFarm.Map
 
             if(currentTile != null)
             {
+                Crop currentCrop = GetCropObject(mouseWorldPos);
+
                 //WORKFLOW: 物品使用实际功能
                 switch (itemDetails.itemType)
                 {
@@ -171,9 +173,11 @@ namespace MFarm.Map
                         EventHandler.CallPlantSeedEvent(itemDetails.itemID, currentTile);
                         EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos, itemDetails.itemType);
                         break;
+
                     case ItemType.Commodity:
                         EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos, itemDetails.itemType);
                         break;
+
                     case ItemType.HoeTool:
                         SetDigGround(currentTile);
                         currentTile.daySinceDug = 0;
@@ -181,18 +185,20 @@ namespace MFarm.Map
                         currentTile.canDropItem = false;
                         // 音效
                         break;
+
                     case ItemType.WaterTool:
                         SetWaterGround(currentTile);
                         currentTile.daySinceWatered = 0;
                         // 音效
                         break;
-                    case ItemType.ChopTool:
-                    case ItemType.CollectTool:
-                        Crop currentCrop = GetCropObject(mouseWorldPos);
 
+                    case ItemType.ChopTool:
+                        currentCrop.ProcessToolAction(itemDetails, currentCrop.tileDetails);
+                        break;
+
+                    case ItemType.CollectTool:
                         // 执行收割方法
                         currentCrop.ProcessToolAction(itemDetails, currentTile);
-
                         break;
                 }
                 UpdateTileDetails(currentTile);         // 更新字典
@@ -204,7 +210,7 @@ namespace MFarm.Map
         /// </summary>
         /// <param name="mouseWorldPos">鼠标坐标</param>
         /// <returns>农作物信息</returns>
-        private Crop GetCropObject(Vector3 mouseWorldPos)
+        public Crop GetCropObject(Vector3 mouseWorldPos)
         {
             Collider2D[] colliders = Physics2D.OverlapPointAll(mouseWorldPos);
             Crop currentCrop = null;

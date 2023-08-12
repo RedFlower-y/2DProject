@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         if(itemDetails.itemType != ItemType.Seed && itemDetails.itemType != ItemType.Commodity && itemDetails.itemType != ItemType.Furniture)
         {
             mouseX = mouseWorldPos.x - transform.position.x;
-            mouseY = mouseWorldPos.y - transform.position.y;
+            mouseY = mouseWorldPos.y - (transform.position.y + Settings.playSize * 0.5f); // 砍树时动画错位修正
 
             if (Mathf.Abs(mouseX) > Mathf.Abs(mouseY))
                 mouseY = 0;     // X轴的偏移大于Y轴的偏移，则判断左右

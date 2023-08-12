@@ -21,4 +21,7 @@ public class Settings
 
     // 收割农作物相关
     public const float waitTimeForHarvest = 1.0f;
+
+    // Player相关
+    public const float playSize = 1.96f;
 }

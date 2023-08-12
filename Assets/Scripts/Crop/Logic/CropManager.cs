@@ -89,6 +89,7 @@ namespace MFarm.CropPlant
 
             // 将农作物信息传递给挂载代码
             cropInstance.GetComponent<Crop>().cropDetails = cropDetails;
+            cropInstance.GetComponent<Crop>().tileDetails = tileDetails;    // 方便砍树时判断农作物自己是否已经成熟,因为只靠农作物本身是无法判断是否成熟
         }
 
         /// <summary>

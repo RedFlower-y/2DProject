@@ -5,10 +5,11 @@ using UnityEngine;
 public class Crop : MonoBehaviour
 {
     public CropDetails cropDetails;
-    private TileDetails tileDetails;
+    public TileDetails tileDetails;
     private int harvestActionCount;     // 记录工具已使用次数
     private Animator anim;
     private Transform PlayerTransform => FindObjectOfType<Player>().transform;
+    public bool CanHarvest => tileDetails.growthDays >= cropDetails.TotalGrowthDays;    // 判断农作物是否成熟
 
     public void ProcessToolAction(ItemDetails tool, TileDetails tile)
     {
@@ -48,7 +49,7 @@ public class Crop : MonoBehaviour
             }
             else if (cropDetails.hasAnimation)
             {
-
+                
             }
         }
     }
