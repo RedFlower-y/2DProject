@@ -27,6 +27,7 @@ namespace MFarm.Map
             EventHandler.ExecuteActionAfterAnimationEvent   += OnExecuteActionAfterAnimationEvent;
             EventHandler.AfterSceneLoadedEvent              += OnAfterSceneLoadedEvent;
             EventHandler.GameDayEvent                       += OnGameDayEvent;
+            EventHandler.RefreshCurrentMap                  += RefreshMap;
         }
 
 
@@ -35,6 +36,7 @@ namespace MFarm.Map
             EventHandler.ExecuteActionAfterAnimationEvent   -= OnExecuteActionAfterAnimationEvent;
             EventHandler.AfterSceneLoadedEvent              -= OnAfterSceneLoadedEvent;
             EventHandler.GameDayEvent                       -= OnGameDayEvent;
+            EventHandler.RefreshCurrentMap                  -= RefreshMap;
         }
 
 
@@ -188,11 +190,10 @@ namespace MFarm.Map
                         Crop currentCrop = GetCropObject(mouseWorldPos);
 
                         // 执行收割方法
-                        currentCrop.ProcessToolAction(itemDetails);
+                        currentCrop.ProcessToolAction(itemDetails, currentTile);
 
                         break;
                 }
-
                 UpdateTileDetails(currentTile);         // 更新字典
             }
         }

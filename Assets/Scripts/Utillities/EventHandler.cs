@@ -157,4 +157,14 @@ public static class EventHandler
     {
         HarvestAtPlayerPosition?.Invoke(ID);
     }
+
+
+    public static event Action RefreshCurrentMap;
+    /// <summary>
+    /// 更新可重复收割的种子瓦片
+    /// </summary>
+    public static void CallRefreshCurrentMap()
+    {
+        RefreshCurrentMap?.Invoke();
+    }
 }

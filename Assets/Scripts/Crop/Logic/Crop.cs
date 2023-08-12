@@ -5,10 +5,13 @@ using UnityEngine;
 public class Crop : MonoBehaviour
 {
     public CropDetails cropDetails;
+    private TileDetails tileDetails;
     private int harvestActionCount;     // 记录工具已使用次数
 
-    public void ProcessToolAction(ItemDetails tool)
+    public void ProcessToolAction(ItemDetails tool, TileDetails tile)
     {
+        tileDetails = tile;
+
         int requireActionCount = cropDetails.GetToolTotalRequireCount(tool.itemID);     // 工具使用次数
 
         if (requireActionCount == -1) return;
@@ -64,7 +67,36 @@ public class Crop : MonoBehaviour
                 {
                     EventHandler.CallHarvestAtPlayerPosition(cropDetails.producedItemID[i]);
                 }
+                else
+                {
+                    // 世界地图上生成物品
+
+                }
             }
+        }
+
+        if(tileDetails != null)
+        {
+            tileDetails.daySinceLastHarvest++;
+
+            if (cropDetails.daysToRegrow > 0 && tileDetails.daySinceLastHarvest < cropDetails.timesOfRegrow)
+            {
+                // 可以重复生长
+                tileDetails.growthDays = cropDetails.TotalGrowthDays - cropDetails.daysToRegrow;
+              
+                EventHandler.CallRefreshCurrentMap();           // 刷新种子
+            }
+            else
+            {
+                // 不可以重复生长
+                tileDetails.daySinceLastHarvest = -1;
+                tileDetails.seedItemID = -1;
+
+                // 因为不可重复生长，所以在收割完果实后，土地恢复为未挖状态
+                //tileDetails.daySinceDug = -1;
+            }
+
+            Destroy(gameObject);
         }
     }
 }
