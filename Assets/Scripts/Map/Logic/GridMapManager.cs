@@ -186,6 +186,7 @@ namespace MFarm.Map
                         currentTile.daySinceWatered = 0;
                         // “Ù–ß
                         break;
+                    case ItemType.ChopTool:
                     case ItemType.CollectTool:
                         Crop currentCrop = GetCropObject(mouseWorldPos);
 

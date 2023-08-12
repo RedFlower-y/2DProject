@@ -660,48 +660,69 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdItem: {fileID: 1126333930}
   animatorTypes:
-  - partType: 0
-    partName: 2
-    overrideController: {fileID: 22100000, guid: 3d01d5dabd530fc4294a36c9484fef72, type: 2}
   - partType: 1
     partName: 2
     overrideController: {fileID: 22100000, guid: 16eb2d85e50d7174c9f2e79ab3100daa, type: 2}
-  - partType: 4
-    partName: 2
-    overrideController: {fileID: 22100000, guid: 2c93155b11ed38542ba21bcac1e1d13c, type: 2}
-  - partType: 5
-    partName: 2
-    overrideController: {fileID: 22100000, guid: 3426a7a57d27f4149ab0027db9f6b020, type: 2}
-  - partType: 0
-    partName: 3
-    overrideController: {fileID: 22100000, guid: bfe193119dd367f49878ee729c6aedbb, type: 2}
-  - partType: 5
-    partName: 3
-    overrideController: {fileID: 22100000, guid: bfe193119dd367f49878ee729c6aedbb, type: 2}
-  - partType: 2
-    partName: 3
-    overrideController: {fileID: 22100000, guid: e1c6e9139d5c3944dae58256780547a5, type: 2}
-  - partType: 4
-    partName: 3
-    overrideController: {fileID: 22100000, guid: 2d4f270154e3aef4cb8c6ba2b303d876, type: 2}
   - partType: 0
     partName: 1
     overrideController: {fileID: 22100000, guid: 6af5dbc9e2ad467449be373e4ab90daa, type: 2}
-  - partType: 4
-    partName: 1
-    overrideController: {fileID: 22100000, guid: d8fffa5a004ae3c41b019a270038ad90, type: 2}
-  - partType: 5
-    partName: 1
-    overrideController: {fileID: 22100000, guid: f7dc4de2ec9d4284e99cbb529a825d8e, type: 2}
   - partType: 0
     partName: 0
     overrideController: {fileID: 22100000, guid: 20a12bddf1f683847b7650c24d63faac, type: 2}
-  - partType: 4
+  - partType: 0
+    partName: 2
+    overrideController: {fileID: 22100000, guid: 3d01d5dabd530fc4294a36c9484fef72, type: 2}
+  - partType: 0
+    partName: 3
+    overrideController: {fileID: 22100000, guid: bfe193119dd367f49878ee729c6aedbb, type: 2}
+  - partType: 5
+    partName: 1
+    overrideController: {fileID: 22100000, guid: d8fffa5a004ae3c41b019a270038ad90, type: 2}
+  - partType: 5
     partName: 0
     overrideController: {fileID: 22100000, guid: 82134ced88439924fb74db6962d7cb40, type: 2}
   - partType: 5
+    partName: 2
+    overrideController: {fileID: 22100000, guid: 2c93155b11ed38542ba21bcac1e1d13c, type: 2}
+  - partType: 5
+    partName: 3
+    overrideController: {fileID: 22100000, guid: 2d4f270154e3aef4cb8c6ba2b303d876, type: 2}
+  - partType: 6
+    partName: 1
+    overrideController: {fileID: 22100000, guid: f7dc4de2ec9d4284e99cbb529a825d8e, type: 2}
+  - partType: 6
     partName: 0
     overrideController: {fileID: 22100000, guid: 51f5503f62fd7ce47980403bcfbdacd6, type: 2}
+  - partType: 6
+    partName: 2
+    overrideController: {fileID: 22100000, guid: 3426a7a57d27f4149ab0027db9f6b020, type: 2}
+  - partType: 6
+    partName: 3
+    overrideController: {fileID: 22100000, guid: bfe193119dd367f49878ee729c6aedbb, type: 2}
+  - partType: 2
+    partName: 1
+    overrideController: {fileID: 22100000, guid: 6af5dbc9e2ad467449be373e4ab90daa, type: 2}
+  - partType: 2
+    partName: 0
+    overrideController: {fileID: 22100000, guid: 20a12bddf1f683847b7650c24d63faac, type: 2}
+  - partType: 2
+    partName: 2
+    overrideController: {fileID: 22100000, guid: 3d01d5dabd530fc4294a36c9484fef72, type: 2}
+  - partType: 2
+    partName: 3
+    overrideController: {fileID: 22100000, guid: e1c6e9139d5c3944dae58256780547a5, type: 2}
+  - partType: 3
+    partName: 1
+    overrideController: {fileID: 22100000, guid: 6af5dbc9e2ad467449be373e4ab90daa, type: 2}
+  - partType: 3
+    partName: 0
+    overrideController: {fileID: 22100000, guid: 20a12bddf1f683847b7650c24d63faac, type: 2}
+  - partType: 3
+    partName: 2
+    overrideController: {fileID: 22100000, guid: 3d01d5dabd530fc4294a36c9484fef72, type: 2}
+  - partType: 3
+    partName: 3
+    overrideController: {fileID: 22100000, guid: 2bc51492c292ce3439f3513dd7054e8d, type: 2}
 --- !u!1 &406801342
 GameObject:
   m_ObjectHideFlags: 0

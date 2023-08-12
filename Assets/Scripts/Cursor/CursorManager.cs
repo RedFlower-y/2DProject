@@ -197,6 +197,7 @@ public class CursorManager : MonoBehaviour
                     if (currentTile.daySinceDug > -1 && currentTile.daySinceWatered == -1) SetCursorValid(); else SetCursorInvalid();
                     break;
 
+                case ItemType.ChopTool:
                 case ItemType.CollectTool:
                     if(currentCrop != null)
                     {
@@ -212,7 +213,6 @@ public class CursorManager : MonoBehaviour
                         SetCursorInvalid();
                     }
                     break;
-
             }
         }
         else

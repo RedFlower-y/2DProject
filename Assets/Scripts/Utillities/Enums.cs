@@ -41,6 +41,7 @@ public enum PartType
     None,
     Carry,
     Hoe,
+    Chop,
     Break,
     Water,
     Collect,
