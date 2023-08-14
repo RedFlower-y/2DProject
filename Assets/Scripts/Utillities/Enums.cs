@@ -80,3 +80,13 @@ public enum GridType
     PlaceFurniture,
     NPCObstacle,
 }
+
+
+public enum ParticaleEffectType
+{
+    None,
+    LeaceFalling01,
+    LeaceFalling02,
+    Rock,
+    ReapableScenery,
+}
