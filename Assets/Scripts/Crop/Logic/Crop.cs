@@ -42,16 +42,55 @@ public class Crop : MonoBehaviour
         if (harvestActionCount >= requireActionCount)
         {
             // 工具次数足够，生成农作物
-            if (cropDetails.generateAtPlayerPosition)
+            if (cropDetails.generateAtPlayerPosition || !cropDetails.hasAnimation)  // 追加非有动画条件，是因为树桩没有动画 也不会在角色位置生成农作物
             {
                 // 生成农作物
                 SpawnHarvestItems();
             }
             else if (cropDetails.hasAnimation)
             {
-                
+                // 树倒下
+                if (PlayerTransform.position.x < transform.position.x)
+                    anim.SetTrigger("FallingRight");
+                else
+                    anim.SetTrigger("FallingLeft");
+
+                StartCoroutine(HarvestAfterAnimation());
             }
         }
+    }
+
+    /// <summary>
+    /// 直到播放完倒下动画（Animator中的END阶段），才生成果实
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator HarvestAfterAnimation()
+    {
+        while(!anim.GetCurrentAnimatorStateInfo(0).IsName("END"))
+        {
+            yield return null;
+        }
+
+        // 生成农作物
+        SpawnHarvestItems();
+
+        // 转换新物体 树转换为树根
+        if (cropDetails.transferItemID > 0)
+        {
+            CreateTransferCrop();
+        }
+    }
+
+    /// <summary>
+    /// 生成转换后的新物体（例 树木砍倒后留下木桩）
+    /// </summary>
+    private void CreateTransferCrop()
+    {
+        tileDetails.seedItemID = cropDetails.transferItemID;
+        tileDetails.daySinceLastHarvest = -1;
+        tileDetails.growthDays = 0;
+
+        EventHandler.CallRefreshCurrentMap();
     }
 
     /// <summary>
@@ -83,8 +122,14 @@ public class Crop : MonoBehaviour
                 }
                 else
                 {
+                    // 判断应该生成的物品方向
+                    var dirX = transform.position.x > PlayerTransform.position.x ? 1 : -1;
+                    // 一定范围内的随机
+                    var spawnPos = new Vector3( transform.position.x + Random.Range(dirX, cropDetails.spawnRadius.x * dirX),
+                                                transform.position.y + Random.Range(-cropDetails.spawnRadius.y, cropDetails.spawnRadius.y), 
+                                                0);
                     // 世界地图上生成物品
-
+                    EventHandler.CallInstantiateItemInScene(cropDetails.producedItemID[i], spawnPos);
                 }
             }
         }

@@ -39,8 +39,9 @@ namespace MFarm.Inventory
         /// <param name="pos">物品加载位置</param>
         private void OnInstantiateItemInScene(int ID, Vector3 pos)
         {
-            var item = Instantiate(itemPrefab, pos, Quaternion.identity, itemParent);
+            var item = Instantiate(bounceItemPrefab, pos, Quaternion.identity, itemParent);
             item.itemID = ID;
+            item.GetComponent<ItemBounce>().InitBounceItem(pos, Vector3.up);    // 砍树掉落物品时，下落动画
         }
 
         /// <summary>
