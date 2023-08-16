@@ -35,7 +35,9 @@ public class Crop : MonoBehaviour
                 else
                     anim.SetTrigger("RotateLeft");
             }
-            // 播放粒子
+            // 播放粒子特效
+            if(cropDetails.hasParticalEffect)
+                EventHandler.CallParticleEffectEvent(cropDetails.effectType, transform.position + cropDetails.effectPos);
             // 播放声音
         }
 

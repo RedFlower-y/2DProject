@@ -60,7 +60,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.084447384, y: 3.1894627}
+  m_Offset: {x: -0.08548212, y: 1.1648259}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -71,7 +71,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.053443, y: 6.7315006}
+  m_Size: {x: 0.9893484, y: 2.6822271}
   m_EdgeRadius: 0
 --- !u!114 &3601991153251730567
 MonoBehaviour:
@@ -103,6 +103,20 @@ MonoBehaviour:
     generateAtPlayerPosition: 0
     hasAnimation: 0
     hasParticalEffect: 0
+    effectType: 0
+    effectPos: {x: 0, y: 0, z: 0}
+  tileDetails:
+    gridX: 0
+    gridY: 0
+    canDig: 0
+    canDropItem: 0
+    canPlaceFurniture: 0
+    isNPCObstacle: 0
+    daySinceDug: -1
+    daySinceWatered: -1
+    seedItemID: -1
+    growthDays: -1
+    daySinceLastHarvest: -1
 --- !u!1 &6881240190354441073
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +128,7 @@ GameObject:
   - component: {fileID: 6881240190354441074}
   - component: {fileID: 6881240190354441084}
   - component: {fileID: 6881240190354441085}
+  - component: {fileID: 4216817679613308176}
   m_Layer: 0
   m_Name: Tree02_Top
   m_TagString: Untagged
@@ -200,6 +215,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0534b0976c9612f4baf47895282c549f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &4216817679613308176
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6881240190354441073}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bd51fdf62a1191a49a5997439323fbd5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6881240190772510948
 GameObject:
   m_ObjectHideFlags: 0

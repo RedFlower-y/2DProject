@@ -167,4 +167,15 @@ public static class EventHandler
     {
         RefreshCurrentMap?.Invoke();
     }
+
+    public static event Action<ParticaleEffectType, Vector3> ParticleEffectEvent;
+    /// <summary>
+    /// 生成粒子特效
+    /// </summary>
+    /// <param name="effectType">特效类型</param>
+    /// <param name="pos">生成坐标</param>
+    public static void CallParticleEffectEvent(ParticaleEffectType effectType,Vector3 pos)
+    {
+        ParticleEffectEvent?.Invoke(effectType, pos);
+    }
 }
