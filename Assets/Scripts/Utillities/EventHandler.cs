@@ -178,4 +178,13 @@ public static class EventHandler
     {
         ParticleEffectEvent?.Invoke(effectType, pos);
     }
+
+    public static event Action GenerateCropEvent;
+    /// <summary>
+    /// 预先生成植物
+    /// </summary>
+    public static void CallGenerateCropEvent()
+    {
+        GenerateCropEvent?.Invoke();
+    }
 }

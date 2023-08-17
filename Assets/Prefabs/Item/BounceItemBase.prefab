@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 8500170772224783500}
   - component: {fileID: 9141518170787694125}
   - component: {fileID: 4915593539341345079}
+  - component: {fileID: 3522443102698907960}
   m_Layer: 0
   m_Name: BounceItemBase
   m_TagString: Untagged
@@ -198,9 +199,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4296c93feca62247be78b5b0f46b233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSpriteTrans: {fileID: 0}
   gravity: -3.5
-  targetPos: {x: 0, y: 0, z: 0}
+--- !u!210 &3522443102698907960
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8500170772224783498}
+  m_Enabled: 1
+  m_SortingLayerID: 216741941
+  m_SortingLayer: 8
+  m_SortingOrder: 0
 --- !u!1 &8500170772354326947
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +283,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 216741941
   m_SortingLayer: 8
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0d5f887d0ba144b7180f3e33336beac5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

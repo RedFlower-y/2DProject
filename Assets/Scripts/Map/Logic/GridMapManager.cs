@@ -19,6 +19,7 @@ namespace MFarm.Map
         public List<MapData_SO> mapDataList;
 
         private Dictionary<string, TileDetails> tileDetailsDict = new Dictionary<string, TileDetails>();    // 场景名字+坐标和对应的瓦片信息
+        private Dictionary<string, bool> isFirstLoadDict = new Dictionary<string, bool>();                  // 判断场景是否是第一次加载 场景预加载物体相关
         private Grid currentGrid;
         private Season currentSeason;
 
@@ -43,7 +44,10 @@ namespace MFarm.Map
         private void Start()
         {
             foreach(var mapData in mapDataList)
+            {
+                isFirstLoadDict.Add(mapData.sceneName, true);
                 InitTileDetailsDict(mapData);
+            }
         }
 
         private void OnAfterSceneLoadedEvent()
@@ -53,7 +57,13 @@ namespace MFarm.Map
             digTilemap      = GameObject.FindWithTag("Dig").GetComponent<Tilemap>();
             waterTilemap    = GameObject.FindWithTag("Water").GetComponent<Tilemap>();
 
-            //DisplayMap(SceneManager.GetActiveScene().name);
+            if (isFirstLoadDict[SceneManager.GetActiveScene().name])
+            {
+                // 预先生成农作物
+                EventHandler.CallGenerateCropEvent();
+                isFirstLoadDict[SceneManager.GetActiveScene().name] = false; // 第一次加载完成后。改为false
+            }
+            
             RefreshMap();
         }
 
@@ -192,13 +202,14 @@ namespace MFarm.Map
                         // 音效
                         break;
 
+                    case ItemType.BreakTool:
                     case ItemType.ChopTool:
-                        currentCrop.ProcessToolAction(itemDetails, currentCrop.tileDetails);
+                        currentCrop?.ProcessToolAction(itemDetails, currentCrop.tileDetails);
                         break;
 
                     case ItemType.CollectTool:
                         // 执行收割方法
-                        currentCrop.ProcessToolAction(itemDetails, currentTile);
+                        currentCrop?.ProcessToolAction(itemDetails, currentTile);
                         break;
                 }
                 UpdateTileDetails(currentTile);         // 更新字典
@@ -251,12 +262,16 @@ namespace MFarm.Map
         /// 执行实际工具或物品功能后，更新瓦片字典
         /// </summary>
         /// <param name="tileDetails"></param>
-        private void UpdateTileDetails(TileDetails tileDetails)
+        public void UpdateTileDetails(TileDetails tileDetails)
         {
             string key = tileDetails.gridX + "x" + tileDetails.gridY + "y" + SceneManager.GetActiveScene().name;
             if(tileDetailsDict.ContainsKey(key))
             {
                 tileDetailsDict[key] = tileDetails;
+            }
+            else
+            {
+                tileDetailsDict.Add(key, tileDetails);
             }
         }
 
