@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-
+using MFarm.CropPlant;
 
 namespace MFarm.Map
 {
@@ -22,6 +22,7 @@ namespace MFarm.Map
         private Dictionary<string, bool> isFirstLoadDict = new Dictionary<string, bool>();                  // 判断场景是否是第一次加载 场景预加载物体相关
         private Grid currentGrid;
         private Season currentSeason;
+        private List<ReapItem> itemsInRadius;        // 杂草列表
 
         private void OnEnable()
         {
@@ -211,6 +212,20 @@ namespace MFarm.Map
                         // 执行收割方法
                         currentCrop?.ProcessToolAction(itemDetails, currentTile);
                         break;
+
+                    case ItemType.ReapTool:
+                        var reapCount = 0;
+                        for (int i = 0; i < itemsInRadius.Count; i++)
+                        {
+                            EventHandler.CallParticleEffectEvent(ParticaleEffectType.ReapableScenery, itemsInRadius[i].transform.position + Vector3.up);
+                            itemsInRadius[i].SpawnHarvestItems();
+                            Destroy(itemsInRadius[i].gameObject);
+
+                            reapCount++;
+                            if (reapCount >= Settings.reapAmount)
+                                break;
+                        }
+                        break;
                 }
                 UpdateTileDetails(currentTile);         // 更新字典
             }
@@ -232,6 +247,36 @@ namespace MFarm.Map
                     currentCrop = colliders[i].GetComponent<Crop>();
             }
             return currentCrop;
+        }
+
+        /// <summary>
+        /// 查找工具范围内符合要求的农作物 查找杂草
+        /// </summary>
+        /// <param name="tool">当前使用工具</param>
+        /// <returns></returns>
+        public bool HaveReapableItemsInRadius(Vector3 mouseWorldPos, ItemDetails tool)
+        {
+            itemsInRadius = new List<ReapItem>();
+
+            Collider2D[] colliders = new Collider2D[20];
+
+            Physics2D.OverlapCircleNonAlloc(mouseWorldPos, tool.itemUseRadius, colliders);
+
+            if (colliders.Length > 0)
+            {
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    if (colliders[i] != null)
+                    {
+                        if (colliders[i].GetComponent<ReapItem>())
+                        {
+                            var item = colliders[i].GetComponent<ReapItem>();
+                            itemsInRadius.Add(item);
+                        }
+                    }
+                }
+            }
+            return itemsInRadius.Count > 0;
         }
 
 

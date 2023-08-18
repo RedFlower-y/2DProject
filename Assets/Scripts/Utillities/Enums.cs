@@ -45,6 +45,7 @@ public enum PartType
     Break,
     Water,
     Collect,
+    Reap,
 }
 
 /// <summary>

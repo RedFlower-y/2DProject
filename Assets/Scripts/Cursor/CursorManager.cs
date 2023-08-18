@@ -225,6 +225,10 @@ public class CursorManager : MonoBehaviour
                         SetCursorInvalid();
                     }
                     break;
+
+                case ItemType.ReapTool:
+                    if (GridMapManager.Instance.HaveReapableItemsInRadius(mouseWorldPos, currentItem)) SetCursorValid(); else SetCursorInvalid();
+                    break;
             }
         }
         else

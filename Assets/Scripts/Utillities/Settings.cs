@@ -24,4 +24,7 @@ public class Settings
 
     // Player相关
     public const float playSize = 1.96f;
+
+    // 割草数量限制
+    public const int reapAmount = 2;
 }
