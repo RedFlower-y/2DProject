@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace MFarm.Astar
+namespace MFarm.AStar
 {
     public class Node : IComparable<Node>
     {
