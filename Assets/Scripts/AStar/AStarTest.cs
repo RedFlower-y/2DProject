@@ -1,0 +1,75 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
+
+namespace MFarm.AStar
+{
+    public class AStarTest : MonoBehaviour
+    {
+        private AStar aStar;
+
+        [Header("用于测试")]
+        public Vector2Int startPos;
+        public Vector2Int targetPos;
+        public Tilemap displayMap;
+        public TileBase displayTile;
+        public bool displayStartAndTartget;
+        public bool displayPath;
+        private Stack<MovementStep> npcMovementStepStack;
+
+        private void Awake()
+        {
+            aStar = GetComponent<AStar>();
+            npcMovementStepStack = new Stack<MovementStep>();
+        }
+
+        private void Update()
+        {
+            ShowPathOnGridMap();
+        }
+
+        private void ShowPathOnGridMap()
+        {
+            if (displayMap != null && displayTile != null)
+            {
+                if(displayStartAndTartget)
+                {
+                    // 生成起点和终点
+                    displayMap.SetTile((Vector3Int)startPos, displayTile);
+                    displayMap.SetTile((Vector3Int)targetPos, displayTile);
+                }
+                else
+                {
+                    displayMap.SetTile((Vector3Int)startPos, null);
+                    displayMap.SetTile((Vector3Int)targetPos, null);
+                }
+
+                if (displayPath)
+                {
+                    // 生成路径
+                    var sceneName = SceneManager.GetActiveScene().name;
+
+                    aStar.BuildPath(sceneName, startPos, targetPos, npcMovementStepStack);
+
+                    foreach(var step in npcMovementStepStack)
+                    {
+                        displayMap.SetTile((Vector3Int)step.gridCoordinate, displayTile);
+                    }
+                }
+                else
+                {
+                    if (npcMovementStepStack.Count > 0)
+                    {
+                        foreach(var step in npcMovementStepStack)
+                        {
+                            displayMap.SetTile((Vector3Int)step.gridCoordinate, null);
+                        }
+                        npcMovementStepStack.Clear();
+                    }
+                }
+            }
+        }
+    }
+}

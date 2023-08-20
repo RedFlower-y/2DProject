@@ -18,7 +18,14 @@ namespace MFarm.AStar
         private HashSet<Node>   closedNodeList;         // 所有被选中的点
         private bool            pathFound;
 
-        public void BuildPath(string sceneName, Vector2Int startPos, Vector2Int targetPos)
+        /// <summary>
+        /// 构建路径更新Stack的每一步
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <param name="startPos"></param>
+        /// <param name="targetPos"></param>
+        /// <param name="npcMovementStack">NPC移动路径</param>
+        public void BuildPath(string sceneName, Vector2Int startPos, Vector2Int targetPos, Stack<MovementStep> npcMovementStack)
         {
             pathFound = false;
 
@@ -28,7 +35,7 @@ namespace MFarm.AStar
                 if(FindShortestPath())
                 {
                     // 构建NPC移动路径
-
+                    UpdatePathOnMovementStepStack(sceneName, npcMovementStack);
                 }
             }
         }
@@ -184,6 +191,25 @@ namespace MFarm.AStar
                 return 14 * yDistance + 10 * (xDistance - yDistance);
 
             return 14 * xDistance + 10 * (yDistance - xDistance);
+        }
+
+        /// <summary>
+        /// 更新路径每一步的坐标和场景名字
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <param name="npcMovemnetStep"></param>
+        private void UpdatePathOnMovementStepStack(string sceneName, Stack<MovementStep> npcMovemnetStep)
+        {
+            Node nextNode = targetNode;
+            while (nextNode != null)
+            {
+                MovementStep newStep = new MovementStep();
+                newStep.sceneName = sceneName;
+                newStep.gridCoordinate = new Vector2Int(nextNode.gridPosition.x + originX, nextNode.gridPosition.y + originY);  // 场景的真实坐标
+
+                npcMovemnetStep.Push(newStep);      // 压入堆栈
+                nextNode = nextNode.parentNode;
+            }
         }
     }
 }
