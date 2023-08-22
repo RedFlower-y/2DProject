@@ -101,3 +101,11 @@ public class TileDetails
     public int  growthDays = -1;             // 记录种子生长时间
     public int  daySinceLastHarvest = -1;    // 记录距离上一次收割过了多长时间
 }
+
+[System.Serializable]
+public class NPCPosition
+{
+    public Transform npc;
+    public string startScene;
+    public Vector3 position;
+}
