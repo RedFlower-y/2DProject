@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager : Singloten<TimeManager>
 {
     private int gameSecond, gameMinute, gameHour, gameDay, gameMonth, gameYear;
     private Season gameSeason = Season.春天;
@@ -10,8 +11,11 @@ public class TimeManager : MonoBehaviour
     public bool gameClockPause;         // 时间暂停
     private float tikTime;
 
-    private void Awake()
+    public TimeSpan GameTime => new TimeSpan(gameHour, gameMinute, gameSecond);     // 获取当前游戏时间
+
+    protected override void Awake()
     {
+        base.Awake();
         NewGameTime();
     }
 

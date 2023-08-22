@@ -556,6 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f34b41c28a3b2344686d79f71f91b9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scheduleData: {fileID: 11400000, guid: d9da4cdc6eceb2044b0155e5fdac97ca, type: 2}
   currentScene: 02.Home
   normalSpeed: 2
   isMoving: 0

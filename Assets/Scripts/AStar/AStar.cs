@@ -5,7 +5,7 @@ using MFarm.Map;
 
 namespace MFarm.AStar
 {
-    public class AStar : MonoBehaviour
+    public class AStar : Singloten<AStar>
     {
         private GridNodes       gridNodes;
         private Node            startNode;
