@@ -536,7 +536,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 129705299}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.37, y: -7.49, z: 0}
+  m_LocalPosition: {x: 2.24, y: -6.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scheduleData: {fileID: 11400000, guid: d9da4cdc6eceb2044b0155e5fdac97ca, type: 2}
-  currentScene: 02.Home
+  currentScene: 01.Field
   normalSpeed: 2
   isMoving: 0
 --- !u!95 &129705302
@@ -1312,11 +1312,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPos: {x: 0, y: 0}
-  targetPos: {x: 0, y: 0}
+  finishPos: {x: 0, y: 0}
   displayMap: {fileID: 1474235593}
   displayTile: {fileID: 11400000, guid: c0d9f4d70b7655043b0a5480506883ef, type: 2}
   displayStartAndTartget: 0
   displayPath: 0
+  npcMovement: {fileID: 129705301}
+  moveNPC: 0
+  targetScene: 01.Field
+  targetPos: {x: 2, y: -12}
+  stopClip: {fileID: 7400000, guid: 54d560542c0284c169c56cddc7145ac6, type: 2}
 --- !u!114 &947075812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,8 +1363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcPositionList:
   - npc: {fileID: 129705300}
-    startScene: 02.Home
-    position: {x: -2.37, y: -7.49, z: 0}
+    startScene: 01.Field
+    position: {x: 2, y: -7, z: 0}
 --- !u!1 &1015925710
 GameObject:
   m_ObjectHideFlags: 0

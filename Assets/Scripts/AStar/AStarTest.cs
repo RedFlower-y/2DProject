@@ -12,12 +12,19 @@ namespace MFarm.AStar
 
         [Header("用于测试")]
         public Vector2Int startPos;
-        public Vector2Int targetPos;
+        public Vector2Int finishPos;
         public Tilemap displayMap;
         public TileBase displayTile;
         public bool displayStartAndTartget;
         public bool displayPath;
         private Stack<MovementStep> npcMovementStepStack;
+
+        [Header("测试移动NPC")]
+        public NPCMovement npcMovement;
+        public bool moveNPC;
+        [SceneName]public string targetScene;
+        public Vector2Int targetPos;
+        public AnimationClip stopClip;
 
         private void Awake()
         {
@@ -28,6 +35,13 @@ namespace MFarm.AStar
         private void Update()
         {
             ShowPathOnGridMap();
+
+            if(moveNPC)
+            {
+                moveNPC = false;
+                var schedule = new ScheduleDetails(0, 0, 0, 0, Season.春天, targetScene, targetPos, stopClip, true);
+                npcMovement.BuildPath(schedule);
+            }
         }
 
         private void ShowPathOnGridMap()
@@ -38,12 +52,12 @@ namespace MFarm.AStar
                 {
                     // 生成起点和终点
                     displayMap.SetTile((Vector3Int)startPos, displayTile);
-                    displayMap.SetTile((Vector3Int)targetPos, displayTile);
+                    displayMap.SetTile((Vector3Int)finishPos, displayTile);
                 }
                 else
                 {
                     displayMap.SetTile((Vector3Int)startPos, null);
-                    displayMap.SetTile((Vector3Int)targetPos, null);
+                    displayMap.SetTile((Vector3Int)finishPos, null);
                 }
 
                 if (displayPath)
@@ -51,7 +65,7 @@ namespace MFarm.AStar
                     // 生成路径
                     var sceneName = SceneManager.GetActiveScene().name;
 
-                    aStar.BuildPath(sceneName, startPos, targetPos, npcMovementStepStack);
+                    aStar.BuildPath(sceneName, startPos, finishPos, npcMovementStepStack);
 
                     foreach(var step in npcMovementStepStack)
                     {
