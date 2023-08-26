@@ -29,7 +29,8 @@ public class Settings
     public const int reapAmount = 2;
 
     // NPC网格移动
-    public const float gridCellSize = 1;               // 网格长度
-    public const float gridCellDiagonaSize = 1.41f;    // 网格斜方向长度
-    public const float pixelSize = 0.05f;              // 像素尺寸 20*20 占 1unit
+    public const float gridCellSize = 1;                // 网格长度
+    public const float gridCellDiagonaSize = 1.41f;     // 网格斜方向长度
+    public const float pixelSize = 0.05f;               // 像素尺寸 20*20 占 1unit
+    public const float animationBreakTime = 5f;         // 动画间隔时间
 }

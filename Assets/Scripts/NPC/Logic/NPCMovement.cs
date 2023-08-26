@@ -29,7 +29,7 @@ public class NPCMovement : MonoBehaviour
     private float minSpeed = 1f;
     private float maxSpeed = 3f;
     private Vector2 dir;
-    public bool isMoving;
+    public bool isMoving;       // 动画控制
 
     // Components
     private Rigidbody2D rb;
@@ -41,8 +41,15 @@ public class NPCMovement : MonoBehaviour
     private Stack<MovementStep> movementSteps;
 
     private bool isInitialised;             // 确保只在第一次加载场景的时候初始化NPC移动   
-    private bool isNPCmove;
+    private bool isNPCmove;                 // 行为控制
     private bool isSceneLoaded;             // 是否加载完了场景
+
+    // 动画计时器相关
+    private float   animationBreakTime;
+    private bool    canPlayStopAnimation;
+    private AnimationClip   stopAnimationClip;
+    public  AnimationClip   blankAnimationClip;
+    private AnimatorOverrideController animOverride;
 
     private TimeSpan GameTime => TimeManager.Instance.GameTime;
 
@@ -52,22 +59,43 @@ public class NPCMovement : MonoBehaviour
         spriteRenderer  = GetComponent<SpriteRenderer>();
         coll            = GetComponent<BoxCollider2D>();
         animator        = GetComponent<Animator>();
-        movementSteps   = new Stack<MovementStep>();
+        movementSteps   = new Stack<MovementStep>();  
+
+        // 初始化
+        animOverride = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = animOverride;
+
+        scheduleSet = new SortedSet<ScheduleDetails>();
+        foreach(var schedule in scheduleData.scheduleList)
+        {
+            scheduleSet.Add(schedule);
+        }
     }
 
     private void OnEnable()
     {
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+        EventHandler.GameMinuteEvent        += OnGameMinuteEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+        EventHandler.GameMinuteEvent        -= OnGameMinuteEvent;
     }
 
-    
+
+    private void Update()
+    {
+        if (isSceneLoaded)
+            SwitchAnimation();
+
+        // 动画计时器
+        animationBreakTime -= Time.deltaTime;
+        canPlayStopAnimation = animationBreakTime <= 0;
+    }
 
     private void FixedUpdate()
     {
@@ -93,6 +121,32 @@ public class NPCMovement : MonoBehaviour
 
         isSceneLoaded = true;
     }
+
+    private void OnGameMinuteEvent(int minute, int hour, int day, Season season)
+    {
+        int time = (hour * 100) + minute;
+
+        ScheduleDetails matchSchedule = null;
+        foreach(var schedule in scheduleSet)
+        {
+            if(schedule.Time == time)
+            {
+                if (schedule.day != day && schedule.day != 0)
+                    continue;
+                if (schedule.season != season)
+                    continue;
+                matchSchedule = schedule;
+            }
+            else if (schedule.Time > time)
+            {
+                break;
+            }
+        }
+
+        if (matchSchedule != null)
+            BuildPath(matchSchedule);
+    }
+
 
     /// <summary>
     /// 判断当前场景NPC是否可视
@@ -137,6 +191,11 @@ public class NPCMovement : MonoBehaviour
                 TimeSpan stepTime = new TimeSpan(step.hour, step.minute, step.second);
 
                 MoveToGridPosition(nextGridPosition, stepTime);
+            }
+            else if(!isMoving && canPlayStopAnimation)
+            {
+                // 不在移动中 且 当前可以播放特定点动画
+                StartCoroutine(SetStopAnimation());
             }
         }
     }
@@ -204,6 +263,10 @@ public class NPCMovement : MonoBehaviour
     {
         movementSteps.Clear();
         currentSchedule = scheduleDetails;
+
+        // 动画相关
+        targetGridPosition = (Vector3Int)scheduleDetails.targetGridPosition;
+        stopAnimationClip = scheduleDetails.clipAtStop;
 
         if(scheduleDetails.targetScene == currentScene)
         {
@@ -273,6 +336,50 @@ public class NPCMovement : MonoBehaviour
     {
         Vector3 worldPos = grid.CellToWorld(gridPos);
         return new Vector3(worldPos.x + Settings.gridCellSize * 0.5f, worldPos.y + Settings.gridCellSize * 0.5f);
+    }
+
+    /// <summary>
+    /// 切换动画
+    /// </summary>
+    private void SwitchAnimation()
+    {
+        isMoving = transform.position != GetWorldPosition(targetGridPosition);
+        animator.SetBool("isMoving", isMoving);
+        if(isMoving)
+        {
+            animator.SetBool("Exit", true);
+            animator.SetFloat("DirX", dir.x);
+            animator.SetFloat("DirY", dir.y);
+        }
+        else
+        {
+            animator.SetBool("Exit", false);
+        }
+    }
+
+    /// <summary>
+    /// 播放停止时的特定动画
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator SetStopAnimation()
+    {
+        // 强制面向镜头
+        animator.SetFloat("DirX", 0);
+        animator.SetFloat("DirY", -1);
+
+        animationBreakTime = Settings.animationBreakTime;   // 重置等待时间
+        if (stopAnimationClip != null)
+        {
+            animOverride[blankAnimationClip] = stopAnimationClip;
+            animator.SetBool("EventAnimation", true);
+            yield return null;
+            animator.SetBool("EventAnimation", false);
+        }
+        else
+        {
+            animOverride[stopAnimationClip] = blankAnimationClip;
+            animator.SetBool("EventAnimation", false);
+        }
     }
 
     #region 设置NPC显示情况

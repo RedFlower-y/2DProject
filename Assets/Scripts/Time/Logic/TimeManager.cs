@@ -24,7 +24,7 @@ public class TimeManager : Singloten<TimeManager>
         // 为什么写在Start里面 而不写在NewGameTIme()里面？
         // 因为EventHandler.CallGameDateEvent()和EventHandler.CallGameMinuteEvent()事件注册是在awake之后执行，而Start是在事件注册之后执行
         EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
-        EventHandler.CallGameMinuteEvent(gameMinute, gameHour);
+        EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
     }
 
     private void Update()
@@ -122,7 +122,7 @@ public class TimeManager : Singloten<TimeManager>
                 }
                 EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
             }
-            EventHandler.CallGameMinuteEvent(gameMinute, gameHour);
+            EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
         }
 
         //Debug.Log("Second:" + gameSecond + "Minute:" + gameMinute);
