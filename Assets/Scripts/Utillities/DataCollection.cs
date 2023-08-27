@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]   // 序列化
@@ -108,4 +109,26 @@ public class NPCPosition
     public Transform npc;
     public string startScene;
     public Vector3 position;
+}
+
+/// <summary>
+/// 场景路径的节点
+/// </summary>
+[System.Serializable]
+public class ScenePath
+{
+    public string sceneName;
+    public Vector2Int fromGridCell;
+    public Vector2Int goToGridCell;
+}
+
+/// <summary>
+/// 场景路径
+/// </summary>
+[System.Serializable]
+public class SceneRoute
+{
+    public string fromSceneName;
+    public string goToSceneName;
+    public List<ScenePath> scenePathList;
 }

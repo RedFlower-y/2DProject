@@ -270,9 +270,46 @@ public class NPCMovement : MonoBehaviour
 
         if(scheduleDetails.targetScene == currentScene)
         {
+            // 目标坐标在当前场景中
             AStar.Instance.BuildPath(scheduleDetails.targetScene, (Vector2Int)currentGridPosition, scheduleDetails.targetGridPosition, movementSteps);
         }
-        // TODO:跨场景移动
+        else if (scheduleDetails.targetScene != currentScene)
+        {
+            // 跨场景移动
+            SceneRoute sceneRoute = NPCManager.Instance.GetSceneRoute(currentScene, scheduleDetails.targetScene);
+            if (sceneRoute != null)
+            {
+                for (int i = 0; i < sceneRoute.scenePathList.Count; i++)
+                {
+                    Vector2Int fromPos, goToPos;
+                    ScenePath path = sceneRoute.scenePathList[i];
+
+                    if (path.fromGridCell.x >= Settings.maxGridSize || path.fromGridCell.y >= Settings.maxGridSize)
+                    {
+                        // 当前还没有移动到目标坐标的场景
+                        fromPos = (Vector2Int)currentGridPosition;
+                    }
+                    else
+                    {
+                        // 当前已经移动到目标坐标的场景
+                        fromPos = path.fromGridCell;
+                    }
+
+                    if (path.goToGridCell.x >= Settings.maxGridSize || path.goToGridCell.y >= Settings.maxGridSize)
+                    {
+                        // 当前已经移动到目标坐标的场景
+                        goToPos = scheduleDetails.targetGridPosition;
+                    }
+                    else
+                    {
+                        // 当前还没有移动到目标坐标的场景 
+                        goToPos = path.goToGridCell;
+                    }
+                    AStar.Instance.BuildPath(path.sceneName, fromPos, goToPos, movementSteps);
+                }
+            }
+        }
+
 
         if (movementSteps.Count > 1)
         {
@@ -387,16 +424,16 @@ public class NPCMovement : MonoBehaviour
     {
         spriteRenderer.enabled = true;
         coll.enabled = true;
-        // TODO:影子关闭
-        //transform.GetChild(0).gameObject.SetActive(true);
+        // 影子开启
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 
     private void SetInactiveInScene()
     {
         spriteRenderer.enabled = false;
         coll.enabled = false;
-        // TODO:影子关闭
-        //transform.GetChild(0).gameObject.SetActive(false);
+        // 影子关闭
+        transform.GetChild(0).gameObject.SetActive(false);
     }
     #endregion
 }

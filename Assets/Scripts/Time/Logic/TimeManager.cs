@@ -19,6 +19,29 @@ public class TimeManager : Singloten<TimeManager>
         NewGameTime();
     }
 
+    private void OnEnable()
+    {
+        EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
+        EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
+        EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+    }
+
+  
+    private void OnBeforeSceneUnloadEvent()
+    {
+        gameClockPause = true;
+    }
+
+    private void OnAfterSceneLoadedEvent()
+    {
+        gameClockPause = false;
+    }
+
     private void Start()
     {
         // 为什么写在Start里面 而不写在NewGameTIme()里面？

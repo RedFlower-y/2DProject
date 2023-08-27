@@ -1362,6 +1362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc12bfdf5b79c0469b0ed6a36f52481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneRouteDate: {fileID: 11400000, guid: d6e831ac8054bb84fb8a654360b5c5b3, type: 2}
   npcPositionList:
   - npc: {fileID: 129705300}
     startScene: 01.Field
