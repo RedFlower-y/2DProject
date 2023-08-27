@@ -144,7 +144,7 @@ namespace MFarm.Map
         /// </summary>
         /// <param name="key">keyֵ</param>
         /// <returns></returns>
-        private TileDetails GetTileDetails(string key)
+        public TileDetails GetTileDetails(string key)
         {
             if(tileDetailsDict.ContainsKey(key))
                 return tileDetailsDict[key];

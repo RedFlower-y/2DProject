@@ -41,6 +41,10 @@ namespace MFarm.CropPlant
                 if(tile == null)
                 {
                     tile = new TileDetails();
+
+                    // 初始化，防止预先生成在(0,0)点上
+                    tile.gridX = cropGridPos.x;
+                    tile.gridY = cropGridPos.y;
                 }
 
                 tile.daySinceWatered = -1;
