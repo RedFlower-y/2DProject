@@ -6,7 +6,7 @@ namespace MFarm.Transition
 {
     public class Teleport : MonoBehaviour
     {
-        public string sceneToGo;
+        [SceneName]public string sceneToGo;
         public Vector3 positonToGo;
 
         private void OnTriggerEnter2D(Collider2D other)
