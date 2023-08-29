@@ -43,6 +43,7 @@ public class NPCMovement : MonoBehaviour
     private bool isInitialised;             // 确保只在第一次加载场景的时候初始化NPC移动   
     private bool isNPCmove;                 // 行为控制
     private bool isSceneLoaded;             // 是否加载完了场景
+    public  bool interactable;              // 是否可互动 将ScheduleDetails中的interactable传进来
 
     // 动画计时器相关
     private float   animationBreakTime;
@@ -268,7 +269,9 @@ public class NPCMovement : MonoBehaviour
         targetGridPosition = (Vector3Int)scheduleDetails.targetGridPosition;
         stopAnimationClip = scheduleDetails.clipAtStop;
 
-        if(scheduleDetails.targetScene == currentScene)
+        this.interactable = scheduleDetails.interactable;           // 将ScheduleDetails中的interactable传进来
+
+        if (scheduleDetails.targetScene == currentScene)
         {
             // 目标坐标在当前场景中
             AStar.Instance.BuildPath(scheduleDetails.targetScene, (Vector2Int)currentGridPosition, scheduleDetails.targetGridPosition, movementSteps);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using MFarm.Dialogue;
 
 public static class EventHandler
 {
@@ -186,5 +187,15 @@ public static class EventHandler
     public static void CallGenerateCropEvent()
     {
         GenerateCropEvent?.Invoke();
+    }
+
+    public static event Action<DialoguePiece> ShowDialogueEvent;
+    /// <summary>
+    /// œ‘ æ∂‘ª∞
+    /// </summary>
+    /// <param name="dialoguePiece"></param>
+    public static void CallShowDialogueEvent(DialoguePiece dialoguePiece)
+    {
+        ShowDialogueEvent?.Invoke(dialoguePiece);
     }
 }

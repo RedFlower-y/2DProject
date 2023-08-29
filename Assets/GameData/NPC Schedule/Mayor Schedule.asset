@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Mayor Schedule
   m_EditorClassIdentifier: 
   scheduleList:
-  - hour: 11
-    minute: 0
+  - hour: 7
+    minute: 20
     day: 0
     priority: 0
     season: 0
     targetScene: 01.Field
     targetGridPosition: {x: 10, y: -7}
     clipAtStop: {fileID: 7400000, guid: db32c3897ab64466f86a8993b8e48f9e, type: 2}
-    interactable: 0
+    interactable: 1
   - hour: 12
     minute: 0
     day: 0
