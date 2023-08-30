@@ -16,21 +16,29 @@ namespace MFarm.Inventory
         [SerializeField] private GameObject bagUI;
         private bool bagOpened;
 
+        [Header("通用背包UI")]
+        [SerializeField] private GameObject baseBag;
+        public GameObject shopSlotPrefab;
+
         [SerializeField] private SlotUI[] playerSlots;
+        [SerializeField] private List<SlotUI> baseBagSlots;
+
 
         private void OnEnable()
         {
-            EventHandler.UpdateInventoryUI      += OnUpdateInventory;
+            EventHandler.UpdateInventoryUI      += OnUpdateInventoryUI;
             EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
+            EventHandler.BaseBagOpenEvent       += OnBaseBagOpenEvent;
         }
 
         private void OnDisable()
         {
-            EventHandler.UpdateInventoryUI      -= OnUpdateInventory;
+            EventHandler.UpdateInventoryUI      -= OnUpdateInventoryUI;
             EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
+            EventHandler.BaseBagOpenEvent       -= OnBaseBagOpenEvent;
         }
 
-        
+       
 
         private void Start()
         {
@@ -48,6 +56,33 @@ namespace MFarm.Inventory
                 OpenBagUI();
         }
 
+        private void OnBaseBagOpenEvent(SlotType slotType, InventoryBag_SO bag_SO)
+        {
+            // TODO: 储存箱的prefab
+            GameObject prefab = slotType switch
+            {
+                SlotType.Shop => shopSlotPrefab,
+                _ => null,
+            };
+
+            // 生成背包UI
+            baseBag.SetActive(true);
+
+            baseBagSlots = new List<SlotUI>();
+
+            for (int i = 0; i < bag_SO.itemList.Count; i++)
+            {
+                var slot = Instantiate(prefab, baseBag.transform.GetChild(0)).GetComponent<SlotUI>();
+                slot.slotIndex = i;
+                baseBagSlots.Add(slot);
+            }
+
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(baseBag.GetComponent<RectTransform>()); // 强制刷新UI
+            // 更新UI显示
+            OnUpdateInventoryUI(InventoryLocation.Box, bag_SO.itemList);
+        }
+
         /// <summary>
         /// 切换场景
         /// </summary>
@@ -62,7 +97,7 @@ namespace MFarm.Inventory
         /// </summary>
         /// <param name="location">库存类型</param>
         /// <param name="list">数据列表</param>
-        private void OnUpdateInventory(InventoryLocation location, List<InventoryItem> list)
+        private void OnUpdateInventoryUI(InventoryLocation location, List<InventoryItem> list)
         {
             switch(location)
             {
@@ -81,6 +116,18 @@ namespace MFarm.Inventory
                     }
                     break;
                 case InventoryLocation.Box:
+                    for (int i = 0; i < baseBagSlots.Count; i++)
+                    {
+                        if (list[i].itemAmount > 0)
+                        {
+                            var item = InventoryManager.Instance.GetItemDetails(list[i].itemID);
+                            baseBagSlots[i].UpdateSlot(item, list[i].itemAmount);
+                        }
+                        else
+                        {
+                            baseBagSlots[i].UpdateEmptySlot();
+                        }
+                    }
                     break;
             }
         }

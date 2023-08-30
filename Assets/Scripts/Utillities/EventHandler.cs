@@ -198,4 +198,15 @@ public static class EventHandler
     {
         ShowDialogueEvent?.Invoke(dialoguePiece);
     }
+
+    public static event Action<SlotType, InventoryBag_SO> BaseBagOpenEvent;
+    /// <summary>
+    /// 打开物品目录 (商店 或者 储物箱)
+    /// </summary>
+    /// <param name="slotType">目录类型</param>
+    /// <param name="bag_SO">对应数据SO</param>
+    public static void CallBaseBagOpenEvent(SlotType slotType,InventoryBag_SO bag_SO)
+    {
+        BaseBagOpenEvent?.Invoke(slotType, bag_SO);
+    }
 }
