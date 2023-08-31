@@ -209,4 +209,37 @@ public static class EventHandler
     {
         BaseBagOpenEvent?.Invoke(slotType, bag_SO);
     }
+
+    public static event Action<SlotType, InventoryBag_SO> BaseBagCloseEvent;
+    /// <summary>
+    /// 关闭物品目录 (商店 或者 储物箱)
+    /// </summary>
+    /// <param name="slotType">目录类型</param>
+    /// <param name="bag_SO">对应数据SO</param>
+    public static void CallBaseBagCloseEvent(SlotType slotType, InventoryBag_SO bag_SO)
+    {
+        BaseBagCloseEvent?.Invoke(slotType, bag_SO);
+    }
+
+
+    public static event Action<GameState> UpdateGameStateEvent;
+    /// <summary>
+    /// 更新游戏运行状态
+    /// </summary>
+    /// <param name="gameState"></param>
+    public static void CallUpdateGameStateEvent(GameState gameState)
+    {
+        UpdateGameStateEvent?.Invoke(gameState);
+    }
+
+    public static event Action<ItemDetails, bool> ShowTradeUI;
+    /// <summary>
+    /// 显示交易详情窗口
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="isSell"></param>
+    public static void CallShowTradeUI(ItemDetails item,bool isSell)
+    {
+        ShowTradeUI?.Invoke(item, isSell);
+    }
 }

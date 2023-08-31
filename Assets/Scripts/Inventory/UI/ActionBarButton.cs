@@ -11,14 +11,26 @@ namespace MFarm.Inventory
 
         private SlotUI slotUI;
 
+        private bool canUseKeyboard;    // 在物品交易窗口打开时，禁止使用键盘快捷键控制物品栏
+
         private void Awake()
         {
             slotUI = GetComponent<SlotUI>();
         }
 
+        private void OnEnable()
+        {
+            EventHandler.UpdateGameStateEvent += OnUpdateGameStateEvent;
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.UpdateGameStateEvent -= OnUpdateGameStateEvent;
+        }
+
         private void Update()
         {
-            if(Input.GetKeyDown(key))
+            if (Input.GetKeyDown(key) && canUseKeyboard)
             {
                 slotUI.isSelected = !slotUI.isSelected;
                 if (slotUI.isSelected)
@@ -28,6 +40,11 @@ namespace MFarm.Inventory
 
                 EventHandler.CallItemSelectedEvent(slotUI.itemDetails, slotUI.isSelected);
             }
+        }
+
+        private void OnUpdateGameStateEvent(GameState gameState)
+        {
+            canUseKeyboard = gameState == GameState.GamePlay;
         }
     }
 }

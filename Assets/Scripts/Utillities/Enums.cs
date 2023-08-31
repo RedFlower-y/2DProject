@@ -82,7 +82,9 @@ public enum GridType
     NPCObstacle,
 }
 
-
+/// <summary>
+/// 特效类型
+/// </summary>
 public enum ParticaleEffectType
 {
     None,
@@ -90,4 +92,13 @@ public enum ParticaleEffectType
     LeaceFalling02,
     Rock,
     ReapableScenery,
+}
+
+/// <summary>
+/// 游戏状态
+/// </summary>
+public enum GameState
+{
+    GamePlay,
+    GamePause,
 }

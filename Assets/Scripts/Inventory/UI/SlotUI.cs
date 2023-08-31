@@ -132,11 +132,23 @@ namespace MFarm.Inventory
                 var targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>();
                 int targetIndex = targetSlot.slotIndex;
 
-                // 在Player自身背包范围内交换
+                
                 if(slotType == SlotType.Bag && targetSlot.slotType == SlotType.Bag)
                 {
+                    // 在Player自身背包范围内交换
                     InventoryManager.Instance.SwapItem(slotIndex, targetIndex);
                 }
+                else if (slotType == SlotType.Shop && targetSlot.slotType == SlotType.Bag)
+                {
+                    // 买
+                    EventHandler.CallShowTradeUI(itemDetails, false);
+                }
+                else if (slotType == SlotType.Bag && targetSlot.slotType == SlotType.Shop)
+                {
+                    // 卖
+                    EventHandler.CallShowTradeUI(itemDetails, true);
+                }
+
 
                 // 清空所有高亮显示
                 inventoryUI.UpdateSlotHighlight(-1);

@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
         EventHandler.MoveToPosition         += OnMoveToPosition;
         EventHandler.MouseClickedEvent      += OnMouseClickedEvent;
+        EventHandler.UpdateGameStateEvent   += OnUpdateGameStateEvent;
     }
 
     private void OnDisable()
@@ -38,6 +39,37 @@ public class Player : MonoBehaviour
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
         EventHandler.MoveToPosition         -= OnMoveToPosition;
         EventHandler.MouseClickedEvent      -= OnMouseClickedEvent;
+        EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
+    }
+
+    private void Update()
+    {
+        if (!inputDisable)
+            PlayerInput();
+        else
+            isMoving = false;
+        SwitchAnimation();
+    }
+
+    private void FixedUpdate()
+    {
+        // 转换场景时，停止移动
+        if (!inputDisable)
+            // 运用了刚体，所以需要在FixedUpdate中调用
+            Movement();
+    }
+
+    private void OnUpdateGameStateEvent(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.GamePlay:
+                inputDisable = false;
+                break;
+            case GameState.GamePause:
+                inputDisable = true;
+                break;
+        }
     }
 
     private void OnMouseClickedEvent(Vector3 mouseWorldPos, ItemDetails itemDetails)
@@ -98,22 +130,7 @@ public class Player : MonoBehaviour
         inputDisable = true;
     }
 
-    private void Update()
-    {
-        if(!inputDisable)
-            PlayerInput();
-        else
-            isMoving = false;
-        SwitchAnimation();
-    }
-
-    private void FixedUpdate()
-    {
-        // 转换场景时，停止移动
-        if (!inputDisable)
-            // 运用了刚体，所以需要在FixedUpdate中调用
-            Movement();
-    }
+    
 
     private void PlayerInput()
     {
