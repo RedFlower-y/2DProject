@@ -12,6 +12,9 @@ namespace MFarm.Inventory
         [Header("背包数据")]
         public InventoryBag_SO playerBag;
 
+        [Header("交易")]
+        public int playerMoney;
+
         private void OnEnable()
         {
             EventHandler.DropItemEvent              += OnDropItemEvent;
@@ -184,6 +187,39 @@ namespace MFarm.Inventory
                 playerBag.itemList[index] = newItem;
             }
 
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
+        }
+
+        /// <summary>
+        /// 交易物品
+        /// </summary>
+        /// <param name="itemDetails">物品信息</param>
+        /// <param name="amount">交易数量</param>
+        /// <param name="isSellTrade">是否卖东西</param>
+        public void TradeItem(ItemDetails itemDetails, int amount, bool isSellTrade)
+        {
+            int cost = itemDetails.itemPrice * amount;
+            int index = GetItemIndexInBag(itemDetails.itemID);  // 获取物品背包位置
+
+            if (isSellTrade)
+            {
+                // 卖
+                if (playerBag.itemList[index].itemAmount >= amount)
+                {
+                    RemoveItem(itemDetails.itemID, amount);
+                    cost = (int)(cost * itemDetails.sellPercentage);
+                    playerMoney += cost;
+                }
+            }
+            else if (playerMoney - cost >= 0)
+            {
+                // 买
+                if (CheckBagCapacity())
+                {
+                    AddItemAtIndex(itemDetails.itemID, index, amount);
+                }
+                playerMoney -= cost;
+            }
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
         }
     }
