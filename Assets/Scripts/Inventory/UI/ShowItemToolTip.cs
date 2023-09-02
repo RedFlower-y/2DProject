@@ -25,13 +25,25 @@ namespace MFarm.Inventory
         {
             if (slotUI.itemDetails != null)
             {
-                //Debug.Log("1");
                 //Debug.Log(eventData.pointerCurrentRaycast.gameObject);
                 inventoryUI.itemToolTip.gameObject.SetActive(true);
                 inventoryUI.itemToolTip.SetupToolTip(slotUI.itemDetails, slotUI.slotType);
 
                 inventoryUI.itemToolTip.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);     //  修改介绍文本框的锚点位置，使其从中心变为中下
                 inventoryUI.itemToolTip.transform.position = transform.position + Vector3.up * 60;
+
+                // 家具的合成
+                if(slotUI.itemDetails.itemType == ItemType.Furniture)
+                {
+                    // 是图纸，开启蓝图合成栏
+                    inventoryUI.itemToolTip.resourcePanel.SetActive(true);
+                    inventoryUI.itemToolTip.SetupResourcePanel(slotUI.itemDetails.itemID);
+                }
+                else
+                {
+                    // 不是图纸，关闭蓝图合成栏
+                    inventoryUI.itemToolTip.resourcePanel.SetActive(false);
+                }
             }
             else
             {
