@@ -181,6 +181,7 @@ MonoBehaviour:
   bagUI: {fileID: 1966994676}
   baseBag: {fileID: 591589250}
   shopSlotPrefab: {fileID: 2193009457357680460, guid: 2edc6ca625f9cb14eb5585979bc242bc, type: 3}
+  boxSlotPrefab: {fileID: 2193009457357680460, guid: 54f685b032d3c9f46962bac64c7f5480, type: 3}
   tradeUI: {fileID: 2007439560}
   playerMoneyText: {fileID: 2033430152}
   playerSlots:
@@ -1974,7 +1975,7 @@ MonoBehaviour:
   m_text: Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
-  m_sharedMaterial: {fileID: -5500602910915721019, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_sharedMaterial: {fileID: 5600293225226522830, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4540,7 +4541,7 @@ MonoBehaviour:
   m_text: Type
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
-  m_sharedMaterial: {fileID: -5500602910915721019, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_sharedMaterial: {fileID: 5600293225226522830, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4750,10 +4751,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=\"red\">\u6D4B\u8BD5<color=\"black\">\u6587\u672C"
+  m_text: "<color=\"red\">\u6D4B\u8BD5<color=\"black\">\u6587\u672C\n\u50A8\u7269\u7BB1"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
-  m_sharedMaterial: {fileID: -5500602910915721019, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_sharedMaterial: {fileID: 5600293225226522830, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7298,8 +7299,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
-  m_sharedMaterial: {fileID: -5500602910915721019, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_fontAsset: {fileID: 0}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7541,7 +7542,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6D4B\u8BD5\u6D4B\u8BD5\n"
+  m_Text: "\u6D4B\u8BD5\u6D4B\u8BD5 \n"
 --- !u!222 &1451702455
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8008,8 +8009,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u6309 <color=\"black>\u7A7A\u683C<color=\"white> \u7EE7\u7EED"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
-  m_sharedMaterial: {fileID: -5500602910915721019, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_fontAsset: {fileID: 0}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8603,7 +8604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1826038688
 RectTransform:
   m_ObjectHideFlags: 0

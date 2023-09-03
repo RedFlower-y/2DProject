@@ -20,6 +20,7 @@ namespace MFarm.Inventory
         [Header("通用背包UI")]
         [SerializeField] private GameObject baseBag;
         public GameObject shopSlotPrefab;
+        public GameObject boxSlotPrefab;
 
         [Header("交易UI")]
         public TradeUI tradeUI;
@@ -72,11 +73,11 @@ namespace MFarm.Inventory
 
         private void OnBaseBagOpenEvent(SlotType slotType, InventoryBag_SO bag_SO)
         {
-            // TODO: 储存箱的prefab
             GameObject prefab = slotType switch
             {
-                SlotType.Shop => shopSlotPrefab,
-                _ => null,
+                SlotType.Shop   => shopSlotPrefab,
+                SlotType.Box    => boxSlotPrefab,
+                _               => null,
             };
 
             // 生成背包UI

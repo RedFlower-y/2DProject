@@ -73,6 +73,14 @@ public class SceneItem
     public SerializableVector3 position;
 }
 
+[System.Serializable]
+public class SceneFurniture
+{
+    // TODO:更多信息 例如储物箱
+    public int itemID;
+    public SerializableVector3 position;
+}
+
 
 /// <summary>
 /// 瓦片地图属性
