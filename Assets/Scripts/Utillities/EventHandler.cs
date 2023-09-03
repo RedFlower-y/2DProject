@@ -242,4 +242,16 @@ public static class EventHandler
     {
         ShowTradeUI?.Invoke(item, isSell);
     }
+
+
+    public static event Action<int, Vector3> BuildFurnitureEvent;
+    /// <summary>
+    /// 通过ID查找蓝图数据,同时传递生成坐标
+    /// </summary>
+    /// <param name="ID"></param>
+    /// <param name="pos"></param>
+    public static void CallBuildFurnitureEvent(int ID, Vector3 pos)
+    {
+        BuildFurnitureEvent?.Invoke(ID, pos);
+    }
 }

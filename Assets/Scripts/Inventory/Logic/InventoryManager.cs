@@ -22,14 +22,18 @@ namespace MFarm.Inventory
         {
             EventHandler.DropItemEvent              += OnDropItemEvent;
             EventHandler.HarvestAtPlayerPosition    += OnHarvestAtPlayerPosition;
+            EventHandler.BuildFurnitureEvent        += OnBuildFurnitureEvent;
         }
 
         private void OnDisable()
         {
             EventHandler.DropItemEvent              -= OnDropItemEvent;
             EventHandler.HarvestAtPlayerPosition    -= OnHarvestAtPlayerPosition;
+            EventHandler.BuildFurnitureEvent        -= OnBuildFurnitureEvent;
         }
+
         
+
         private void Start()
         {
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
@@ -48,6 +52,16 @@ namespace MFarm.Inventory
 
             // 更新UI
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
+        }
+
+        private void OnBuildFurnitureEvent(int ID, Vector3 mousePos)
+        {
+            RemoveItem(ID, 1);          // 移除设计图
+            BluePrintDetails bluePrint = bluePrintData.GetBluePrintDetails(ID);
+            foreach (var item in bluePrint.resourceItem)
+            {
+                RemoveItem(item.itemID, item.itemAmount);   // 移除对应原材料
+            }
         }
 
         /// <summary>
@@ -224,6 +238,30 @@ namespace MFarm.Inventory
                 playerMoney -= cost;
             }
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
+        }
+
+        /// <summary>
+        /// 检查蓝图中物品是否能够建造(原材料对应库存是否满足)
+        /// </summary>
+        /// <param name="ID">图纸ID</param>
+        /// <returns></returns>
+        public bool CheckStock(int ID)
+        {
+            var bluePrintDetails = bluePrintData.GetBluePrintDetails(ID);
+
+            foreach (var resourceItem in bluePrintDetails.resourceItem)
+            {
+                var itemStock = playerBag.GetInventoryItem(resourceItem.itemID);
+                if (itemStock.itemAmount >= resourceItem.itemAmount)
+                {
+                    continue;       // 继续判断蓝图中的下一个物品
+                }
+                else
+                {
+                    return false;   // 任意一个物品不够的话，则返回false(无法建造)
+                }
+            }
+            return true;            // 所有物品的数量都满足
         }
     }
 }

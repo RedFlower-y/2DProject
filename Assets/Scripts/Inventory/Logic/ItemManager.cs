@@ -22,6 +22,7 @@ namespace MFarm.Inventory
             EventHandler.DropItemEvent          += OnDropItemEvent;
             EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
             EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+            EventHandler.BuildFurnitureEvent    += OnBuildFurnitureEvent;       // 建造
         }
 
         private void OnDisable()
@@ -30,7 +31,10 @@ namespace MFarm.Inventory
             EventHandler.DropItemEvent          -= OnDropItemEvent;
             EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
             EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+            EventHandler.BuildFurnitureEvent    -= OnBuildFurnitureEvent;       // 建造
         }
+
+        
 
         /// <summary>
         /// 物品实例化，加载到场景
@@ -76,7 +80,13 @@ namespace MFarm.Inventory
         {
             itemParent = GameObject.FindWithTag("ItemParent").transform;
             RecreateAllItem();
-        }  
+        }
+
+        private void OnBuildFurnitureEvent(int ID, Vector3 mousePos)
+        {
+            BluePrintDetails bluePrint = InventoryManager.Instance.bluePrintData.GetBluePrintDetails(ID);
+            var buildItem = Instantiate(bluePrint.buildPrefab, mousePos, Quaternion.identity, itemParent);      // 实际生成
+        }
 
         /// <summary>
         /// 获取当前场景的全部物品信息

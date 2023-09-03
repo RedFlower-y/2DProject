@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using MFarm.Map;
 using MFarm.CropPlant;
+using MFarm.Inventory;
 
 public class CursorManager : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class CursorManager : MonoBehaviour
     private Image cursorImage;
     private RectTransform cursorCanvas;
 
+    // 建造图标跟随
+    private Image buildImage;           // 跟随鼠标的建造物(蓝图生成)图片
+
+    // 鼠标检测
     private bool cursorEnable;          // 鼠标是否可用
     private bool cursorPositionValid;   // 鼠标是否可点
 
@@ -47,6 +52,10 @@ public class CursorManager : MonoBehaviour
         currentSprite = normal;
         SetCursorImage(currentSprite);
 
+        // 拿到建造物的图标
+        buildImage = cursorCanvas.GetChild(1).GetComponent<Image>();
+        buildImage.gameObject.SetActive(false);
+
         mainCamera = Camera.main;
     }
 
@@ -66,6 +75,7 @@ public class CursorManager : MonoBehaviour
         else
         {
             SetCursorImage(normal);
+            buildImage.gameObject.SetActive(false);
         }
     }
 
@@ -109,6 +119,8 @@ public class CursorManager : MonoBehaviour
     {
         cursorPositionValid = true;
         cursorImage.color = new Color(1, 1, 1, 1);
+
+        buildImage.color = new Color(1, 1, 1, 0.5f);    // 可以建造时，将建造物图片设置为半透明
     }
 
     /// <summary>
@@ -118,6 +130,8 @@ public class CursorManager : MonoBehaviour
     {
         cursorPositionValid = false;
         cursorImage.color = new Color(1, 0, 0, 0.4f);
+
+        buildImage.color = new Color(1, 0, 0, 0.5f);    // 不可以建造时，将建造物图片设置为半透明红色
     }
     #endregion
 
@@ -133,6 +147,8 @@ public class CursorManager : MonoBehaviour
             currentItem = null;
             cursorEnable = false;
             currentSprite = normal;
+
+            buildImage.gameObject.SetActive(false);      // 没被选择，关闭建造物图片
         }
         else
         {   // 物品被选中，切换图片
@@ -151,8 +167,15 @@ public class CursorManager : MonoBehaviour
                 ItemType.CollectTool    => tool,
                 _                       => normal,
             };
-
             cursorEnable = true;
+
+            // 显示建造物图片
+            if (itemDetails.itemType == ItemType.Furniture)
+            {
+                buildImage.gameObject.SetActive(true);
+                buildImage.sprite = itemDetails.itemOnWorldSprite;
+                buildImage.SetNativeSize();
+            }
         }     
     }
     /// <summary>
@@ -163,6 +186,9 @@ public class CursorManager : MonoBehaviour
         mouseWorldPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z)); // 因为2D游戏mainCamera的z轴为-10
         mouseGridPos = currentGrid.WorldToCell(mouseWorldPos);
         //Debug.Log("WorldPos:" + mouseWorldPos + "   GridPos:" + mouseGridPos);
+
+        // 建造物图片跟随移动
+        buildImage.rectTransform.position = Input.mousePosition;
 
         // 判断物品的适用范围
         var playerGridPos = currentGrid.WorldToCell(playerTransform.position);
@@ -179,7 +205,7 @@ public class CursorManager : MonoBehaviour
             CropDetails currentCrop = CropManager.Instance.GetCropDetails(currentTile.seedItemID);
             Crop crop = GridMapManager.Instance.GetCropObject(mouseWorldPos);
 
-            // WORKFLOW:不充所有物品类型的判断
+            // WORKFLOW:补充所有物品类型的判断
             switch(currentItem.itemType)
             {
                 case ItemType.Seed:
@@ -229,6 +255,14 @@ public class CursorManager : MonoBehaviour
                 case ItemType.ReapTool:
                     if (GridMapManager.Instance.HaveReapableItemsInRadius(mouseWorldPos, currentItem)) SetCursorValid(); else SetCursorInvalid();
                     break;
+
+                case ItemType.Furniture:
+                    buildImage.gameObject.SetActive(true);
+                    if (currentTile.canPlaceFurniture && InventoryManager.Instance.CheckStock(currentItem.itemID))
+                        SetCursorValid();
+                    else
+                        SetCursorInvalid();
+                    break;
             }
         }
         else
@@ -236,6 +270,8 @@ public class CursorManager : MonoBehaviour
             SetCursorInvalid();
         }
     }
+
+    
 
     /// <summary>
     /// 是否与UI互动
