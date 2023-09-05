@@ -91,6 +91,13 @@ namespace MFarm.Inventory
         {
             BluePrintDetails bluePrint = InventoryManager.Instance.bluePrintData.GetBluePrintDetails(ID);
             var buildItem = Instantiate(bluePrint.buildPrefab, mousePos, Quaternion.identity, itemParent);      // 实际生成
+
+            // 再点击生成物体的时候，就赋值给箱子编号
+            if (buildItem.GetComponent<Box>())
+            {
+                buildItem.GetComponent<Box>().index = InventoryManager.Instance.BoxDataAmount;
+                buildItem.GetComponent<Box>().InitBox(buildItem.GetComponent<Box>().index);
+            }
         }
 
         /// <summary>
@@ -168,6 +175,10 @@ namespace MFarm.Inventory
                     itemID = item.itemID,
                     position = new SerializableVector3(item.transform.position),
                 };
+
+                if (item.GetComponent<Box>())
+                    sceneFurniture.boxIndex = item.GetComponent<Box>().index;
+
                 currentSceneFurniture.Add(sceneFurniture);
             }
 
@@ -198,7 +209,14 @@ namespace MFarm.Inventory
                 {
                     foreach (SceneFurniture sceneFurniture in currentSceneFurniture)
                     {
-                        OnBuildFurnitureEvent(sceneFurniture.itemID, sceneFurniture.position.ToVector3());
+                        BluePrintDetails bluePrint = InventoryManager.Instance.bluePrintData.GetBluePrintDetails(sceneFurniture.itemID);
+                        var buildItem = Instantiate(bluePrint.buildPrefab, sceneFurniture.position.ToVector3(), Quaternion.identity, itemParent);      // 实际生成
+
+                        if (buildItem.GetComponent<Box>())
+                        {
+                            // 已有index编号的箱子，直接获取原本index编号
+                            buildItem.GetComponent<Box>().InitBox(sceneFurniture.boxIndex);
+                        }
                     }
                 }
             }

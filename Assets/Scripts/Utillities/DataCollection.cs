@@ -76,9 +76,9 @@ public class SceneItem
 [System.Serializable]
 public class SceneFurniture
 {
-    // TODO:更多信息 例如储物箱
     public int itemID;
     public SerializableVector3 position;
+    public int boxIndex;            // 箱子序号
 }
 
 

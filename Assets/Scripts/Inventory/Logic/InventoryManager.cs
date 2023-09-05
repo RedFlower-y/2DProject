@@ -14,15 +14,21 @@ namespace MFarm.Inventory
 
         [Header("背包数据")]
         public InventoryBag_SO playerBag;
+        private InventoryBag_SO currentBoxBag;
 
         [Header("交易")]
         public int playerMoney;
+
+        private Dictionary<string, List<InventoryItem>> boxDataDict = new Dictionary<string, List<InventoryItem>>();
+
+        public int BoxDataAmount => boxDataDict.Count;  // 方便储物箱的编号
 
         private void OnEnable()
         {
             EventHandler.DropItemEvent              += OnDropItemEvent;
             EventHandler.HarvestAtPlayerPosition    += OnHarvestAtPlayerPosition;
             EventHandler.BuildFurnitureEvent        += OnBuildFurnitureEvent;
+            EventHandler.BaseBagOpenEvent           += OnBaseBagOpenEvent;
         }
 
         private void OnDisable()
@@ -30,9 +36,9 @@ namespace MFarm.Inventory
             EventHandler.DropItemEvent              -= OnDropItemEvent;
             EventHandler.HarvestAtPlayerPosition    -= OnHarvestAtPlayerPosition;
             EventHandler.BuildFurnitureEvent        -= OnBuildFurnitureEvent;
+            EventHandler.BaseBagOpenEvent           -= OnBaseBagOpenEvent;
         }
 
-        
 
         private void Start()
         {
@@ -62,6 +68,11 @@ namespace MFarm.Inventory
             {
                 RemoveItem(item.itemID, item.itemAmount);   // 移除对应原材料
             }
+        }
+
+        private void OnBaseBagOpenEvent(SlotType slotType, InventoryBag_SO bag_SO)
+        {
+            currentBoxBag = bag_SO;
         }
 
         /// <summary>
@@ -184,6 +195,63 @@ namespace MFarm.Inventory
         }
 
         /// <summary>
+        /// 跨背包交换物品
+        /// </summary>
+        /// <param name="fromLocation"></param>
+        /// <param name="fromIndex"></param>
+        /// <param name="targetLoaction"></param>
+        /// <param name="targetIndex"></param>
+        public void SwapItem(InventoryLocation fromLocation, int fromIndex, InventoryLocation targetLoaction, int targetIndex)
+        {
+            var currentList = GetItemList(fromLocation);
+            var targetList  = GetItemList(targetLoaction);
+
+            InventoryItem currentItem = currentList[fromIndex];
+
+            if (targetIndex < targetList.Count)
+            {
+                InventoryItem targetItem = targetList[targetIndex];
+
+                if (targetItem.itemID != 0 && currentItem.itemID != targetItem.itemID)
+                {
+                    // 不相同的两个物品
+                    currentList[fromIndex]  = targetItem;
+                    targetList[targetIndex] = currentItem;
+                }
+                else if (currentItem.itemID == targetItem.itemID)
+                {
+                    // 相同的两个物品
+                    targetItem.itemAmount   += currentItem.itemAmount;
+                    targetList[targetIndex] = targetItem;
+                    currentList[fromIndex]  = new InventoryItem();
+                }
+                else
+                {
+                    // 将物品移到空格子中
+                    targetList[targetIndex] = currentItem;
+                    currentList[fromIndex] = new InventoryItem();
+                }
+                EventHandler.CallUpdateInventoryUI(fromLocation, currentList);
+                EventHandler.CallUpdateInventoryUI(targetLoaction, targetList);
+            }
+        }
+
+        /// <summary>
+        /// 根据物品所处位置返回背包数据列表
+        /// </summary>
+        /// <param name="location">物品所处位置</param>
+        /// <returns></returns>
+        private List<InventoryItem> GetItemList(InventoryLocation location)
+        {
+            return location switch
+            {
+                InventoryLocation.Player    => playerBag.itemList,
+                InventoryLocation.Box       => currentBoxBag.itemList,
+                _                           => null,
+            };
+        }
+
+        /// <summary>
         /// 移除指定数量的背包物品
         /// </summary>
         /// <param name="ID">物品ID</param>
@@ -262,6 +330,29 @@ namespace MFarm.Inventory
                 }
             }
             return true;            // 所有物品的数量都满足
+        }
+
+        /// <summary>
+        /// 根据key查找箱子数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public List<InventoryItem> GetBoxDataList(string key)
+        {
+            if(boxDataDict.ContainsKey(key))
+                return boxDataDict[key];
+            return null;
+        }
+
+        /// <summary>
+        /// 添加箱子数据到boxDataDict
+        /// </summary>
+        /// <param name="box"></param>
+        public void AddBoxDataDict(Box box)
+        {
+            var key = box.name + box.index;
+            if (!boxDataDict.ContainsKey(key))
+                boxDataDict.Add(key, box.boxBagData.itemList);
         }
     }
 }

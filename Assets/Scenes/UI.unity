@@ -4751,7 +4751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=\"red\">\u6D4B\u8BD5<color=\"black\">\u6587\u672C\n\u50A8\u7269\u7BB1"
+  m_text: "<color=\"red\">\u6D4B\u8BD5<color=\"black\">\u6587\u672C\n\u77F3\u5934"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
   m_sharedMaterial: {fileID: 5600293225226522830, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
