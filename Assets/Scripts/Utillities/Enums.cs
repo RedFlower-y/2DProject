@@ -102,3 +102,12 @@ public enum GameState
     GamePlay,
     GamePause,
 }
+
+/// <summary>
+/// 不同时间周期对应灯光
+/// </summary>
+public enum LightShift
+{
+    Morning,
+    Night,
+}
