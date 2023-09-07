@@ -254,4 +254,16 @@ public static class EventHandler
     {
         BuildFurnitureEvent?.Invoke(ID, pos);
     }
+
+    public static event Action<Season, LightShift, float> LightShiftChangeEvent;
+    /// <summary>
+    /// 根据时间切换灯光
+    /// </summary>
+    /// <param name="season">季节</param>
+    /// <param name="lightShift">时间周期对应灯光</param>
+    /// <param name="timeOfChangeLight">灯光切换时间差</param>
+    public static void CallLightShiftChangeEvent(Season season, LightShift lightShift, float timeOfChangeLight)
+    {
+        LightShiftChangeEvent?.Invoke(season, lightShift, timeOfChangeLight);
+    }
 }

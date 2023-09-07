@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Settings
 {
@@ -34,4 +35,9 @@ public class Settings
     public const float  pixelSize = 0.05f;               // 像素尺寸 20*20 占 1unit
     public const float  animationBreakTime = 5f;         // 动画间隔时间
     public const int    maxGridSize = 9999;              // 最大地图尺寸，NPC跨场景移动相关
+
+    // 灯光
+    public const float lightChangeDuration = 25f;       // 灯光切换时间
+    public static TimeSpan morningTime  = new TimeSpan(5, 0, 0);
+    public static TimeSpan nightTime    = new TimeSpan(19, 0, 0);
 }

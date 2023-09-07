@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class LightManager : MonoBehaviour
 {
-    private LightControl[] sceneLights;
-    private LightShift currentLightShift;
-    private Season currentSeason;
+    private LightControl[]  sceneLights;
+    private LightShift      currentLightShift;
+    private Season          currentSeason;
+    private float           timeOfChangeLight;
 
     private void OnEnable()
     {
         EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+        EventHandler.LightShiftChangeEvent += OnLightShiftChangeEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
-    }
+        EventHandler.LightShiftChangeEvent -= OnLightShiftChangeEvent;
+    }  
 
     private void OnAfterSceneLoadedEvent()
     {
@@ -24,7 +27,24 @@ public class LightManager : MonoBehaviour
 
         foreach (LightControl light in sceneLights)
         {
-            // lightcontrol 改变灯光的方法
+            // 切换灯光
+            light.ChangeLightShift(currentSeason, currentLightShift, timeOfChangeLight);
+        }
+    }
+
+    private void OnLightShiftChangeEvent(Season season, LightShift lightShift, float timeOfChangeLight)
+    {
+        currentSeason = season;
+        this.timeOfChangeLight = timeOfChangeLight;
+        if (currentLightShift != lightShift)
+        {
+            currentLightShift = lightShift;
+
+            foreach (LightControl light in sceneLights)
+            {
+                // 切换灯光
+                light.ChangeLightShift(currentSeason, currentLightShift, timeOfChangeLight);
+            }
         }
     }
 }

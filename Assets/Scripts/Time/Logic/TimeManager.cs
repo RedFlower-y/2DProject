@@ -5,11 +5,14 @@ using System;
 
 public class TimeManager : Singloten<TimeManager>
 {
-    private int gameSecond, gameMinute, gameHour, gameDay, gameMonth, gameYear;
-    private Season gameSeason = Season.春天;
-    private int mouthInSeason = 3;
-    public bool gameClockPause;         // 时间暂停
-    private float tikTime;
+    private int     gameSecond, gameMinute, gameHour, gameDay, gameMonth, gameYear;
+    private Season  gameSeason = Season.春天;
+    private int     mouthInSeason = 3;
+    public  bool    gameClockPause;         // 时间暂停
+    private float   tikTime;
+
+    // 灯光相关
+    private float   timeDifference;         // 灯光切换时间差
 
     public TimeSpan GameTime => new TimeSpan(gameHour, gameMinute, gameSecond);     // 获取当前游戏时间
 
@@ -48,6 +51,9 @@ public class TimeManager : Singloten<TimeManager>
         // 因为EventHandler.CallGameDateEvent()和EventHandler.CallGameMinuteEvent()事件注册是在awake之后执行，而Start是在事件注册之后执行
         EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
         EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
+
+        // 游戏开始就切换灯光
+        EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
     }
 
     private void Update()
@@ -146,8 +152,32 @@ public class TimeManager : Singloten<TimeManager>
                 EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
             }
             EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
+            // 切换灯光
+            EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
         }
 
         //Debug.Log("Second:" + gameSecond + "Minute:" + gameMinute);
+    }
+
+    /// <summary>
+    /// 返回lightShift 同时计算时间差
+    /// </summary>
+    /// <returns></returns>
+    private LightShift GetCurrentLightShift()
+    {
+        if (GameTime >= Settings.morningTime && GameTime < Settings.nightTime)
+        {
+            timeDifference = (float)(GameTime - Settings.morningTime).TotalMinutes;
+            return LightShift.Morning;
+        }
+
+        if (GameTime < Settings.morningTime || GameTime >= Settings.nightTime)
+        {
+            timeDifference = Mathf.Abs((float)(GameTime - Settings.nightTime).TotalMinutes);
+            Debug.Log(timeDifference);
+            return LightShift.Night;
+        }
+
+        return LightShift.Morning;
     }
 }
