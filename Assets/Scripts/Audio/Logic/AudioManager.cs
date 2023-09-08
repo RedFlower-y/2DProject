@@ -14,7 +14,16 @@ public class AudioManager : MonoBehaviour
     public AudioSource ambientSoundSource;
     public AudioSource backgroundMusicSource;
 
-    public float MusicStartSecond => Random.Range(5f, 15f);
+    [Header("Audio Mixer")]
+    public AudioMixer audioMixer;
+
+    [Header("Snapshots")]
+    public AudioMixerSnapshot normalSnapshots;
+    public AudioMixerSnapshot ambientSoundOnlySnapshots;
+    public AudioMixerSnapshot muteSnapshots;
+    private float musicTransitionSecond = 8f;                   // 声音缓慢增加到目标声音的时间
+
+    public float MusicStartSecond => Random.Range(5f, 15f);     // 环境音加载完毕后开始 到启动背景音乐开始为止的等待时间
     private Coroutine soundRoutine;
 
     private void OnEnable()
@@ -46,31 +55,47 @@ public class AudioManager : MonoBehaviour
     {
         if (backGroundMusic != null && ambientSound != null)
         {
-            PlayAmbientSoundClip(ambientSound);
+            PlayAmbientSoundClip(ambientSound, musicTransitionSecond);
             yield return new WaitForSeconds(MusicStartSecond);
-            PlayBackgroundMusicClip(backGroundMusic);
+            PlayBackgroundMusicClip(backGroundMusic, musicTransitionSecond);
         }
-    }
-
-    /// <summary>
-    /// 播放背景音乐
-    /// </summary>
-    /// <param name="soundDetails"></param>
-    private void PlayBackgroundMusicClip(SoundDatails soundDetails)
-    {
-        backgroundMusicSource.clip = soundDetails.soundClip;
-        if (backgroundMusicSource.isActiveAndEnabled)
-            backgroundMusicSource.Play();
     }
 
     /// <summary>
     /// 播放环境音效
     /// </summary>
     /// <param name="soundDetails"></param>
-    private void PlayAmbientSoundClip(SoundDatails soundDetails)
+    private void PlayAmbientSoundClip(SoundDatails soundDetails, float transitionTime)
     {
+        audioMixer.SetFloat("AmbientSoundVolume", ConvertSoundVolume(soundDetails.soundVolume));
         ambientSoundSource.clip = soundDetails.soundClip;
         if (ambientSoundSource.isActiveAndEnabled)
             ambientSoundSource.Play();
+
+        ambientSoundOnlySnapshots.TransitionTo(1f);
+    }
+
+    /// <summary>
+    /// 播放背景音乐
+    /// </summary>
+    /// <param name="soundDetails"></param>
+    private void PlayBackgroundMusicClip(SoundDatails soundDetails, float transitionTime)
+    {
+        audioMixer.SetFloat("BackgroundMusicVolume", ConvertSoundVolume(soundDetails.soundVolume));
+        backgroundMusicSource.clip = soundDetails.soundClip;
+        if (backgroundMusicSource.isActiveAndEnabled)
+            backgroundMusicSource.Play();
+
+        normalSnapshots.TransitionTo(transitionTime);
+    }
+
+    /// <summary>
+    /// 将SoundDatails中的Volume转换为实际AudioMixer中的音量
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    private float ConvertSoundVolume(float amount)
+    {
+        return (amount * 100 - 80);
     }
 }
