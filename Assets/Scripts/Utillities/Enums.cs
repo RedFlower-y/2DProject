@@ -111,3 +111,39 @@ public enum LightShift
     Morning,
     Night,
 }
+
+/// <summary>
+/// 声音名字
+/// </summary>
+public enum SoundName
+{
+    none,
+    FootStepSoft,
+    FootStepHard,
+
+    Axe,                    // 斧子
+    Pickaxe,                // 稿子
+    Hoe,                    // 锄头
+    Scythe,                 // 镰刀
+    WateringCan,            // 浇水器
+    Basket,                 // 篮子
+
+    Pickup,
+    Plant,
+    Pluck,
+    Rustle,                 // 路过草丛声音
+    TreeFalling,
+    StoneShatter,
+    WoodSplinters,
+    
+
+    AmbientCountryside1,
+    AmbientCountryside2,
+    AmbientIndoor1,
+    MusicCalm1,
+    MusicCalm2,
+    MusicCalm3,
+    MusicCalm4,
+    MusicCalm5,
+    MusicCalm6,
+}
