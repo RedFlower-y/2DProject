@@ -16,6 +16,8 @@ namespace MFarm.Inventory
                 {
                     // 拾取物品添加到背包
                     InventoryManager.Instance.AddItem(item, true);
+
+                    EventHandler.CallPlaySoundEvent(SoundName.Pickup);      // 播放拾取音效
                 }
             }
         }

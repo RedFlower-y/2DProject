@@ -5,16 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SoundDetailsList_SO", menuName = "Sound/SoundDetailsList")]
 public class SoundDetailsList_SO : ScriptableObject
 {
-    public List<SoundDatails> soundDatails;
+    public List<SoundDetails> soundDatails;
 
-    public SoundDatails GetSoundDatails(SoundName name)
+    public SoundDetails GetSoundDetails(SoundName name)
     {
         return soundDatails.Find(s => s.soundName == name);
     }
 }
 
 [System.Serializable]
-public class SoundDatails
+public class SoundDetails
 {
     public SoundName soundName;
     public AudioClip soundClip;

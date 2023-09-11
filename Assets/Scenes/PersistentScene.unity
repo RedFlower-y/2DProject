@@ -412,6 +412,7 @@ GameObject:
   - component: {fileID: 104128796}
   - component: {fileID: 104128797}
   - component: {fileID: 104128798}
+  - component: {fileID: 104128799}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -507,6 +508,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &104128799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104128795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec5053516de31f4f8478290858e2b90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &129705299
 GameObject:
   m_ObjectHideFlags: 0
@@ -2279,7 +2292,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2410,6 +2423,7 @@ MonoBehaviour:
   - {fileID: 3786123746026300138, guid: ca664e8012d3e0a449e3cccde19c67e4, type: 3}
   - {fileID: 9114646804369868990, guid: 95871537c7e78304b8c1b91db7877b27, type: 3}
   - {fileID: 9114646804369868990, guid: c9cd5c86ecd64364ab4d6c21407e5bd9, type: 3}
+  - {fileID: 202125572245879494, guid: 0c5fd0086185bc94ebf907e062003f29, type: 3}
 --- !u!1 &1474235590
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,7 +3021,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

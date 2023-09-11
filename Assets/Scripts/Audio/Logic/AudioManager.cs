@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singloten<AudioManager>
 {
     [Header("音乐数据库")]
     public SoundDetailsList_SO soundDetailsData;
@@ -28,12 +28,14 @@ public class AudioManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+        EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+        EventHandler.PlaySoundEvent         += OnPlaySoundEvent;
     }
 
     private void OnDisable()
     {
-        EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
+        EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+        EventHandler.PlaySoundEvent         -= OnPlaySoundEvent;
     }
 
     private void OnAfterSceneLoadedEvent()
@@ -43,15 +45,28 @@ public class AudioManager : MonoBehaviour
         if (sceneSound == null)
             return;
 
-        SoundDatails ambientSound       = soundDetailsData.GetSoundDatails(sceneSound.ambientSound);
-        SoundDatails backgroundMusic    = soundDetailsData.GetSoundDatails(sceneSound.backgroundMusic);
+        SoundDetails ambientSound       = soundDetailsData.GetSoundDetails(sceneSound.ambientSound);
+        SoundDetails backgroundMusic    = soundDetailsData.GetSoundDetails(sceneSound.backgroundMusic);
 
         if (soundRoutine != null)
             StopCoroutine(soundRoutine);
         soundRoutine = StartCoroutine(PlaySoundRoutine(backgroundMusic, ambientSound));
     }
 
-    private IEnumerator PlaySoundRoutine(SoundDatails backGroundMusic,SoundDatails ambientSound)
+    private void OnPlaySoundEvent(SoundName soundName)
+    {
+        var soundDetails = soundDetailsData.GetSoundDetails(soundName);
+        if (soundDetails != null)
+            EventHandler.CallInitSoundEffect(soundDetails);
+    }
+
+    /// <summary>
+    ///  先播放环境音，然后缓慢播放背景音乐
+    /// </summary>
+    /// <param name="backGroundMusic">背景音乐</param>
+    /// <param name="ambientSound">环境音</param>
+    /// <returns></returns>
+    private IEnumerator PlaySoundRoutine(SoundDetails backGroundMusic,SoundDetails ambientSound)
     {
         if (backGroundMusic != null && ambientSound != null)
         {
@@ -65,7 +80,7 @@ public class AudioManager : MonoBehaviour
     /// 播放环境音效
     /// </summary>
     /// <param name="soundDetails"></param>
-    private void PlayAmbientSoundClip(SoundDatails soundDetails, float transitionTime)
+    private void PlayAmbientSoundClip(SoundDetails soundDetails, float transitionTime)
     {
         audioMixer.SetFloat("AmbientSoundVolume", ConvertSoundVolume(soundDetails.soundVolume));
         ambientSoundSource.clip = soundDetails.soundClip;
@@ -79,7 +94,7 @@ public class AudioManager : MonoBehaviour
     /// 播放背景音乐
     /// </summary>
     /// <param name="soundDetails"></param>
-    private void PlayBackgroundMusicClip(SoundDatails soundDetails, float transitionTime)
+    private void PlayBackgroundMusicClip(SoundDetails soundDetails, float transitionTime)
     {
         audioMixer.SetFloat("BackgroundMusicVolume", ConvertSoundVolume(soundDetails.soundVolume));
         backgroundMusicSource.clip = soundDetails.soundClip;

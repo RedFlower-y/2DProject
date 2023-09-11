@@ -183,6 +183,7 @@ namespace MFarm.Map
                     case ItemType.Seed:
                         EventHandler.CallPlantSeedEvent(itemDetails.itemID, currentTile);
                         EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos, itemDetails.itemType);
+                        EventHandler.CallPlaySoundEvent(SoundName.Plant);               // 播放播种音效
                         break;
 
                     case ItemType.Commodity:
@@ -194,13 +195,13 @@ namespace MFarm.Map
                         currentTile.daySinceDug = 0;
                         currentTile.canDig = false;
                         currentTile.canDropItem = false;
-                        // 音效
+                        EventHandler.CallPlaySoundEvent(SoundName.Hoe);                 // 播放锄头挖地音效
                         break;
 
                     case ItemType.WaterTool:
                         SetWaterGround(currentTile);
                         currentTile.daySinceWatered = 0;
-                        // 音效
+                        EventHandler.CallPlaySoundEvent(SoundName.WateringCan);         // 播放浇水音效
                         break;
 
                     case ItemType.BreakTool:
@@ -214,10 +215,11 @@ namespace MFarm.Map
                         break;
 
                     case ItemType.ReapTool:
+                        Debug.Log("ReapTool");
                         var reapCount = 0;
                         for (int i = 0; i < itemsInRadius.Count; i++)
                         {
-                            EventHandler.CallParticleEffectEvent(ParticaleEffectType.ReapableScenery, itemsInRadius[i].transform.position + Vector3.up);
+                            EventHandler.CallParticleEffectEvent(ParticleEffectType.ReapableScenery, itemsInRadius[i].transform.position + Vector3.up);
                             itemsInRadius[i].SpawnHarvestItems();
                             Destroy(itemsInRadius[i].gameObject);
 
@@ -225,6 +227,7 @@ namespace MFarm.Map
                             if (reapCount >= Settings.reapAmount)
                                 break;
                         }
+                        EventHandler.CallPlaySoundEvent(SoundName.Scythe);         // 播放割草音效
                         break;
 
                     case ItemType.Furniture:

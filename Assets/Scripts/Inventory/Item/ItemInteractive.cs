@@ -21,6 +21,7 @@ public class ItemInteractive : MonoBehaviour
                 // 人物在农作物右边 向左摇晃
                 StartCoroutine(RotateLeft());
             }
+            EventHandler.CallPlaySoundEvent(SoundName.Rustle);      // 播放掠过草丛时的声音
         }
     }
 
@@ -38,6 +39,7 @@ public class ItemInteractive : MonoBehaviour
                 // 人物在农作物右边 向左摇晃
                 StartCoroutine(RotateLeft());
             }
+            EventHandler.CallPlaySoundEvent(SoundName.Rustle);      // 播放掠过草丛时的声音
         }
     }
 

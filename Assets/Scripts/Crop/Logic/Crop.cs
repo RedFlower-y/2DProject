@@ -36,9 +36,19 @@ public class Crop : MonoBehaviour
                     anim.SetTrigger("RotateLeft");
             }
             // 播放粒子特效
-            if(cropDetails.hasParticalEffect)
+            if (cropDetails.hasParticalEffect)
+            {
                 EventHandler.CallParticleEffectEvent(cropDetails.effectType, transform.position + cropDetails.effectPos);
+            }
             // 播放声音
+            if (cropDetails.soundEffect != SoundName.none)
+            {
+                //var soundDetails = AudioManager.Instance.soundDetailsData.GetSoundDetails(cropDetails.soundEffect);
+                //Debug.Log("SoundName:" + soundDetails.soundName.ToString());
+                //EventHandler.CallInitSoundEffect(soundDetails);
+                EventHandler.CallPlaySoundEvent(cropDetails.soundEffect);
+            }
+            
         }
 
         if (harvestActionCount >= requireActionCount)
@@ -48,6 +58,10 @@ public class Crop : MonoBehaviour
             {
                 // 生成农作物
                 SpawnHarvestItems();
+                if (cropDetails.effectType == ParticleEffectType.Rock)
+                {
+                    EventHandler.CallPlaySoundEvent(SoundName.StoneShatter);    // 石头碎掉的声音
+                }
             }
             else if (cropDetails.hasAnimation)
             {
@@ -56,7 +70,7 @@ public class Crop : MonoBehaviour
                     anim.SetTrigger("FallingRight");
                 else
                     anim.SetTrigger("FallingLeft");
-
+                EventHandler.CallPlaySoundEvent(SoundName.TreeFalling);         // 树木倒下的声音
                 StartCoroutine(HarvestAfterAnimation());
             }
         }

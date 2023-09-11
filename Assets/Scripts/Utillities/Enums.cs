@@ -85,7 +85,7 @@ public enum GridType
 /// <summary>
 /// 特效类型
 /// </summary>
-public enum ParticaleEffectType
+public enum ParticleEffectType
 {
     None,
     LeaceFalling01,

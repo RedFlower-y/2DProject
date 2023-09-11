@@ -169,13 +169,13 @@ public static class EventHandler
         RefreshCurrentMap?.Invoke();
     }
 
-    public static event Action<ParticaleEffectType, Vector3> ParticleEffectEvent;
+    public static event Action<ParticleEffectType, Vector3> ParticleEffectEvent;
     /// <summary>
     /// 生成粒子特效
     /// </summary>
     /// <param name="effectType">特效类型</param>
     /// <param name="pos">生成坐标</param>
-    public static void CallParticleEffectEvent(ParticaleEffectType effectType,Vector3 pos)
+    public static void CallParticleEffectEvent(ParticleEffectType effectType,Vector3 pos)
     {
         ParticleEffectEvent?.Invoke(effectType, pos);
     }
@@ -265,5 +265,25 @@ public static class EventHandler
     public static void CallLightShiftChangeEvent(Season season, LightShift lightShift, float timeOfChangeLight)
     {
         LightShiftChangeEvent?.Invoke(season, lightShift, timeOfChangeLight);
+    }
+
+    public static event Action<SoundDetails> InitSoundEffect;
+    /// <summary>
+    /// 播放音效
+    /// </summary>
+    /// <param name="soundDatails"></param>
+    public static void CallInitSoundEffect(SoundDetails soundDatails)
+    {
+        InitSoundEffect?.Invoke(soundDatails);
+    }
+
+    public static event Action<SoundName> PlaySoundEvent;
+    /// <summary>
+    /// 实际播放音效
+    /// </summary>
+    /// <param name="soundName"></param>
+    public static void CallPlaySoundEvent(SoundName soundName)
+    {
+        PlaySoundEvent?.Invoke(soundName);
     }
 }
