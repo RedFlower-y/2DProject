@@ -9,7 +9,7 @@ public class NPCFunction : MonoBehaviour
 
     private void Update()
     {
-        if(isOpen&&Input.GetKeyDown(KeyCode.Escape))
+        if (isOpen && Input.GetKeyDown(KeyCode.Escape))
         {
             // ¹Ø±Õ±³°ü
             CloseShop();
