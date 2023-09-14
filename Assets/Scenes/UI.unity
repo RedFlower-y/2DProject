@@ -8009,8 +8009,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u6309 <color=\"black>\u7A7A\u683C<color=\"white> \u7EE7\u7EED"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 0}
+  m_fontAsset: {fileID: 11400000, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
+  m_sharedMaterial: {fileID: 5600293225226522830, guid: 96663b4e831ef634d8d39354fd7ecf14, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
