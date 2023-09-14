@@ -26,15 +26,17 @@ public class TimeManager : Singloten<TimeManager>
     {
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+        EventHandler.UpdateGameStateEvent   += OnUpdateGameStateEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+        EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
     }
 
-  
+
     private void OnBeforeSceneUnloadEvent()
     {
         gameClockPause = true;
@@ -43,6 +45,11 @@ public class TimeManager : Singloten<TimeManager>
     private void OnAfterSceneLoadedEvent()
     {
         gameClockPause = false;
+    }
+
+    private void OnUpdateGameStateEvent(GameState gameState)
+    {
+        gameClockPause = gameState == GameState.GamePause;          // 开头Timeline过程中停止时间计数
     }
 
     private void Start()
