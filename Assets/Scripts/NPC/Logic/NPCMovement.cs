@@ -4,10 +4,11 @@ using UnityEngine;
 using MFarm.AStar;
 using UnityEngine.SceneManagement;
 using System;
+using MFarm.Save;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
-public class NPCMovement : MonoBehaviour
+public class NPCMovement : MonoBehaviour, ISaveable
 {
     public ScheduleDataList_SO scheduleData;
     private SortedSet<ScheduleDetails> scheduleSet;
@@ -54,6 +55,8 @@ public class NPCMovement : MonoBehaviour
 
     private TimeSpan GameTime => TimeManager.Instance.GameTime;
 
+    public string GUID => GetComponent<DataGUID>().GUID;
+
     private void Awake()
     {
         rb              = GetComponent<Rigidbody2D>();
@@ -87,6 +90,11 @@ public class NPCMovement : MonoBehaviour
         EventHandler.GameMinuteEvent        -= OnGameMinuteEvent;
     }
 
+    private void Start()
+    {
+        ISaveable saveable = this;
+        saveable.RegisterSaveable();
+    }
 
     private void Update()
     {
@@ -439,4 +447,49 @@ public class NPCMovement : MonoBehaviour
         transform.GetChild(0).gameObject.SetActive(false);
     }
     #endregion
+
+    public GameSaveData GenerateSaveData()
+    {
+        GameSaveData saveData = new GameSaveData();
+        saveData.characterPosDict = new Dictionary<string, SerializableVector3>();
+
+        saveData.characterPosDict.Add("targetGridPosition", new SerializableVector3(targetGridPosition));
+
+        saveData.characterPosDict.Add("currentPosition", new SerializableVector3(transform.position));
+
+        saveData.dataSceneName = currentScene;
+
+        saveData.targetScene = this.targetScnene;
+
+        if (stopAnimationClip != null)
+        {
+            saveData.animationInstanceID = stopAnimationClip.GetInstanceID();
+        }
+
+        saveData.interactable = this.interactable;
+
+        return saveData;
+    }
+
+    public void RestoreData(GameSaveData saveData)
+    {
+        isInitialised = true;           // 读取存档时，人物是已经加载过的状态
+
+        Vector3Int gridPos = (Vector3Int)saveData.characterPosDict["targetGridPosition"].ToVector2Int();
+        targetGridPosition = gridPos;
+
+        Vector3 pos = saveData.characterPosDict["currentPosition"].ToVector3();
+        transform.position = pos;
+
+        currentScene = saveData.dataSceneName;
+
+        targetScnene = saveData.targetScene;
+
+        if (saveData.animationInstanceID != 0)
+        {
+            this.stopAnimationClip = Resources.InstanceIDToObject(saveData.animationInstanceID) as AnimationClip;
+        }
+
+        this.interactable = saveData.interactable;
+    }
 }

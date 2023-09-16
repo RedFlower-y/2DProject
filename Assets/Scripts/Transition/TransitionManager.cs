@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MFarm.Save;
 
 namespace MFarm.Transition
 {
-    public class TransitionManager : MonoBehaviour
+    public class TransitionManager : MonoBehaviour, ISaveable
     {
         [SceneName]
         public string startSceneName = string.Empty;
@@ -13,6 +14,12 @@ namespace MFarm.Transition
         private CanvasGroup fadeCanvasGroup;
         private bool isFade;
 
+        public string GUID => GetComponent<DataGUID>().GUID;
+
+        private void Awake()
+        {
+            SceneManager.LoadScene("UI", LoadSceneMode.Additive);           // 非异步加载,直接加载
+        }
 
         /// <summary>
         /// 改成携程是为了在加载第一个场景后，就执行AfterSceneLoadedEvent事件，方便CursorManager中的currentGrid的获取
@@ -20,6 +27,10 @@ namespace MFarm.Transition
         /// <returns></returns>
         private IEnumerator Start()
         {
+            // TODO:转换成开始新游戏
+            ISaveable saveable = this;
+            saveable.RegisterSaveable();
+
             fadeCanvasGroup = FindObjectOfType<CanvasGroup>();          // 找到挂载了CanvasGroup的Object
             yield return StartCoroutine(LoadSceneSetActive(startSceneName));
             EventHandler.CallAfterSceneLoadedEvent();
@@ -70,7 +81,7 @@ namespace MFarm.Transition
         /// <returns></returns>
         private IEnumerator LoadSceneSetActive(string sceneName)
         {
-            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);    // 异步加载，叠加加载
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);    // 异步加载，叠加
 
             Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
 
@@ -96,6 +107,41 @@ namespace MFarm.Transition
             }
             fadeCanvasGroup.blocksRaycasts = false;
             isFade = false;
+        }
+
+        /// <summary>
+        /// 读取存档时的场景加载
+        /// </summary>
+        /// <param name="sceneName">场景名称</param>
+        /// <returns></returns>
+        private IEnumerator LoadSaveDataScene(string sceneName)
+        {
+            yield return Fade(1);
+
+            if (SceneManager.GetActiveScene().name != "PersistentScene")
+            {
+                // 在游戏过程当中，加载新的游戏
+                EventHandler.CallBeforeSceneUnloadEvent();
+                yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            }
+
+            yield return LoadSceneSetActive(sceneName);
+            EventHandler.CallAfterSceneLoadedEvent();
+            yield return Fade(0);
+        }
+
+        public GameSaveData GenerateSaveData()
+        {
+            GameSaveData saveData = new GameSaveData();
+            saveData.dataSceneName = SceneManager.GetActiveScene().name;
+
+            return saveData;
+        }
+
+        public void RestoreData(GameSaveData saveData)
+        {
+            // 加载游戏进度场景
+            StartCoroutine(LoadSaveDataScene(saveData.dataSceneName));
         }
     }
 }

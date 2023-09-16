@@ -44,11 +44,11 @@ namespace MFarm.Inventory
 
 
         private void Start()
-        {
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
-
+        {         
             ISaveable saveable = this;
             saveable.RegisterSaveable();
+
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
         }
 
         private void OnDropItemEvent(int ID, Vector3 pos, ItemType itemType)

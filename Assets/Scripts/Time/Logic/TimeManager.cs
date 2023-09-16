@@ -39,28 +39,6 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
         EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
     }
 
-
-
-    private void OnBeforeSceneUnloadEvent()
-    {
-        gameClockPause = true;
-    }
-
-    private void OnAfterSceneLoadedEvent()
-    {
-        gameClockPause = false;
-
-        // 读取存档后 会加载AfterSceneLoadedEvent()
-        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
-        EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
-        EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
-    }
-
-    private void OnUpdateGameStateEvent(GameState gameState)
-    {
-        gameClockPause = gameState == GameState.GamePause;          // 开头Timeline过程中停止时间计数
-    }
-
     private void Start()
     {
         ISaveable saveable = this;
@@ -99,6 +77,26 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
             EventHandler.CallGameDayEvent(gameDay, gameSeason);
             EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
         }
+    }
+
+    private void OnBeforeSceneUnloadEvent()
+    {
+        gameClockPause = true;
+    }
+
+    private void OnAfterSceneLoadedEvent()
+    {
+        gameClockPause = false;
+
+        // 读取存档后 会加载AfterSceneLoadedEvent()
+        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
+        EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
+        EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
+    }
+
+    private void OnUpdateGameStateEvent(GameState gameState)
+    {
+        gameClockPause = gameState == GameState.GamePause;          // 开头Timeline过程中停止时间计数
     }
 
     private void NewGameTime()
