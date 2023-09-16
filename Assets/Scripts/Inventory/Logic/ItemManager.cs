@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MFarm.Save;
 
 namespace MFarm.Inventory
 {
-    public class ItemManager : MonoBehaviour
+    public class ItemManager : MonoBehaviour, ISaveable
     {
         public Item itemPrefab;
         public Item bounceItemPrefab;
         private Transform itemParent;
 
         private Transform playerTransform => FindObjectOfType<Player>().transform;
+
+        public string GUID => GetComponent<DataGUID>().GUID;
 
         // 记录场景Item
         private Dictionary<string, List<SceneItem>> sceneItemDict = new Dictionary<string, List<SceneItem>>();
@@ -37,7 +40,11 @@ namespace MFarm.Inventory
             EventHandler.BuildFurnitureEvent    -= OnBuildFurnitureEvent;       // 建造
         }
 
-        
+        private void Start()
+        {
+            ISaveable saveable = this;
+            saveable.RegisterSaveable();
+        }
 
         /// <summary>
         /// 物品实例化，加载到场景
@@ -220,6 +227,28 @@ namespace MFarm.Inventory
                     }
                 }
             }
+        }
+
+        public GameSaveData GenerateSaveData()
+        {
+            // 只有在换场景时，才会获取全部数据，所以需要先获取全部数据，保证能在未换场景时保存数据
+            GetAllSceneItem();
+            GetAllSceneFurniture();
+
+            GameSaveData saveData = new GameSaveData();
+            saveData.sceneItemDict = this.sceneItemDict;
+            saveData.sceneFurnitureDict = this.sceneFurnitureDict;
+
+            return saveData;
+        }
+
+        public void RestoreData(GameSaveData saveData)
+        {
+            this.sceneItemDict = saveData.sceneItemDict;
+            this.sceneFurnitureDict = saveData.sceneFurnitureDict;
+
+            RecreateAllItem();
+            RecreateFurniture();
         }
     }
 }

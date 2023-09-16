@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using MFarm.Save;
 
-public class TimeManager : Singloten<TimeManager>
+public class TimeManager : Singloten<TimeManager>, ISaveable
 {
     private int     gameSecond, gameMinute, gameHour, gameDay, gameMonth, gameYear;
     private Season  gameSeason = Season.春天;
@@ -15,6 +16,8 @@ public class TimeManager : Singloten<TimeManager>
     private float   timeDifference;         // 灯光切换时间差
 
     public TimeSpan GameTime => new TimeSpan(gameHour, gameMinute, gameSecond);     // 获取当前游戏时间
+
+    public string GUID => GetComponent<DataGUID>().GUID;
 
     protected override void Awake()
     {
@@ -37,6 +40,7 @@ public class TimeManager : Singloten<TimeManager>
     }
 
 
+
     private void OnBeforeSceneUnloadEvent()
     {
         gameClockPause = true;
@@ -45,6 +49,11 @@ public class TimeManager : Singloten<TimeManager>
     private void OnAfterSceneLoadedEvent()
     {
         gameClockPause = false;
+
+        // 读取存档后 会加载AfterSceneLoadedEvent()
+        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
+        EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
+        EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
     }
 
     private void OnUpdateGameStateEvent(GameState gameState)
@@ -54,6 +63,9 @@ public class TimeManager : Singloten<TimeManager>
 
     private void Start()
     {
+        ISaveable saveable = this;
+        saveable.RegisterSaveable();
+
         // 为什么写在Start里面 而不写在NewGameTIme()里面？
         // 因为EventHandler.CallGameDateEvent()和EventHandler.CallGameMinuteEvent()事件注册是在awake之后执行，而Start是在事件注册之后执行
         EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
@@ -91,13 +103,13 @@ public class TimeManager : Singloten<TimeManager>
 
     private void NewGameTime()
     {
-        gameSecond = 0;
-        gameMinute = 0;
-        gameHour = 7;
-        gameDay = 1;
-        gameMonth = 1;
-        gameYear = 2023;
-        gameSeason = Season.春天;
+        gameSecond  = 0;
+        gameMinute  = 0;
+        gameHour    = 7;
+        gameDay     = 1;
+        gameMonth   = 1;
+        gameYear    = 2023;
+        gameSeason  = Season.春天;
     }
 
     /// <summary>
@@ -186,5 +198,31 @@ public class TimeManager : Singloten<TimeManager>
         }
 
         return LightShift.Morning;
+    }
+
+    public GameSaveData GenerateSaveData()
+    {
+        GameSaveData saveData = new GameSaveData();
+        saveData.timeDict = new Dictionary<string, int>();
+        saveData.timeDict.Add("gameYear"    , gameYear);
+        saveData.timeDict.Add("gameSeason"  , (int)gameSeason);
+        saveData.timeDict.Add("gameMonth"   , gameMonth);
+        saveData.timeDict.Add("gameDay"     , gameDay);
+        saveData.timeDict.Add("gameHour"    , gameHour);
+        saveData.timeDict.Add("gameMinute"  , gameMinute);
+        saveData.timeDict.Add("gameSecond"  , gameSecond);
+
+        return saveData;
+    }
+
+    public void RestoreData(GameSaveData saveData)
+    {
+        gameYear    = saveData.timeDict["gameYear"];
+        gameSeason  = (Season)saveData.timeDict["gameSeason"];
+        gameMonth   = saveData.timeDict["gameMonth"];
+        gameDay     = saveData.timeDict["gameDay"];
+        gameHour    = saveData.timeDict["gameHour"];
+        gameMinute  = saveData.timeDict["gameMinute"];
+        gameSecond  = saveData.timeDict["gameSecond"];
     }
 }
