@@ -14,6 +14,25 @@ public class NPCManager : Singloten<NPCManager>
         InitSceneRouteDict();
     }
 
+    private void OnEnable()
+    {
+        EventHandler.StartNewGameEvent += OnStartNewGameEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.StartNewGameEvent -= OnStartNewGameEvent;
+    }
+
+    private void OnStartNewGameEvent(int index)
+    {
+        foreach (var character in npcPositionList)
+        {
+            character.npc.position = character.position;
+            character.npc.GetComponent<NPCMovement>().StartScene = character.startScene;
+        }
+    }
+
     /// <summary>
     /// ³õÊ¼»¯Â·¾¶×Öµä
     /// </summary>

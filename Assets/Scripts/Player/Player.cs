@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, ISaveable
         EventHandler.MoveToPosition         += OnMoveToPosition;
         EventHandler.MouseClickedEvent      += OnMouseClickedEvent;
         EventHandler.UpdateGameStateEvent   += OnUpdateGameStateEvent;
+        EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
     }
 
     private void OnDisable()
@@ -49,7 +50,9 @@ public class Player : MonoBehaviour, ISaveable
         EventHandler.MoveToPosition         -= OnMoveToPosition;
         EventHandler.MouseClickedEvent      -= OnMouseClickedEvent;
         EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
+        EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
     }
+
 
     private void Update()
     {
@@ -66,6 +69,11 @@ public class Player : MonoBehaviour, ISaveable
         if (!inputDisable)
             // 运用了刚体，所以需要在FixedUpdate中调用
             Movement();
+    }
+    private void OnStartNewGameEvent(int index)
+    {
+        inputDisable = false;
+        transform.position = Settings.playerStartPos;
     }
 
     private void OnUpdateGameStateEvent(GameState gameState)

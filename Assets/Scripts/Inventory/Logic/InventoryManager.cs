@@ -14,6 +14,7 @@ namespace MFarm.Inventory
         public BluePrintList_SO bluePrintData;
 
         [Header("±³°üÊý¾Ý")]
+        public InventoryBag_SO playerBagTemp;
         public InventoryBag_SO playerBag;
         private InventoryBag_SO currentBoxBag;
 
@@ -32,6 +33,7 @@ namespace MFarm.Inventory
             EventHandler.HarvestAtPlayerPosition    += OnHarvestAtPlayerPosition;
             EventHandler.BuildFurnitureEvent        += OnBuildFurnitureEvent;
             EventHandler.BaseBagOpenEvent           += OnBaseBagOpenEvent;
+            EventHandler.StartNewGameEvent          += OnStartNewGameEvent;
         }
 
         private void OnDisable()
@@ -40,6 +42,7 @@ namespace MFarm.Inventory
             EventHandler.HarvestAtPlayerPosition    -= OnHarvestAtPlayerPosition;
             EventHandler.BuildFurnitureEvent        -= OnBuildFurnitureEvent;
             EventHandler.BaseBagOpenEvent           -= OnBaseBagOpenEvent;
+            EventHandler.StartNewGameEvent          -= OnStartNewGameEvent;
         }
 
 
@@ -48,7 +51,7 @@ namespace MFarm.Inventory
             ISaveable saveable = this;
             saveable.RegisterSaveable();
 
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
+            //EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
         }
 
         private void OnDropItemEvent(int ID, Vector3 pos, ItemType itemType)
@@ -79,6 +82,14 @@ namespace MFarm.Inventory
         private void OnBaseBagOpenEvent(SlotType slotType, InventoryBag_SO bag_SO)
         {
             currentBoxBag = bag_SO;
+        }
+
+        private void OnStartNewGameEvent(int index)
+        {
+            playerBag = Instantiate(playerBagTemp);
+            playerMoney = Settings.playerStartMoney;
+            boxDataDict.Clear();
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, playerBag.itemList);
         }
 
         /// <summary>

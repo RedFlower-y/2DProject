@@ -6,7 +6,7 @@ using MFarm.Save;
 
 namespace MFarm.Transition
 {
-    public class TransitionManager : MonoBehaviour, ISaveable
+    public class TransitionManager : Singloten<TransitionManager>, ISaveable
     {
         [SceneName]
         public string startSceneName = string.Empty;
@@ -16,33 +16,50 @@ namespace MFarm.Transition
 
         public string GUID => GetComponent<DataGUID>().GUID;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             SceneManager.LoadScene("UI", LoadSceneMode.Additive);           // 非异步加载,直接加载
         }
 
-        /// <summary>
-        /// 改成携程是为了在加载第一个场景后，就执行AfterSceneLoadedEvent事件，方便CursorManager中的currentGrid的获取
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator Start()
-        {
-            // TODO:转换成开始新游戏
-            ISaveable saveable = this;
-            saveable.RegisterSaveable();
-
-            fadeCanvasGroup = FindObjectOfType<CanvasGroup>();          // 找到挂载了CanvasGroup的Object
-            yield return StartCoroutine(LoadSceneSetActive(startSceneName));
-            EventHandler.CallAfterSceneLoadedEvent();
-        }
         private void OnEnable()
         {
-            EventHandler.TransitionEvent += OnTransitionEvent;
+            EventHandler.TransitionEvent    += OnTransitionEvent;
+            EventHandler.StartNewGameEvent  += OnStartNewGameEvent;
         }
 
         private void OnDisable()
         {
-            EventHandler.TransitionEvent -= OnTransitionEvent;
+            EventHandler.TransitionEvent    -= OnTransitionEvent;
+            EventHandler.StartNewGameEvent  -= OnStartNewGameEvent;
+        }
+
+        ///// <summary>
+        ///// 改成携程是为了在加载第一个场景后，就执行AfterSceneLoadedEvent事件，方便CursorManager中的currentGrid的获取
+        ///// </summary>
+        ///// <returns></returns>
+        //private IEnumerator Start()
+        //{
+        //    // TODO:转换成开始新游戏
+        //    ISaveable saveable = this;
+        //    saveable.RegisterSaveable();
+
+        //    fadeCanvasGroup = FindObjectOfType<CanvasGroup>();          // 找到挂载了CanvasGroup的Object
+        //    yield return StartCoroutine(LoadSceneSetActive(startSceneName));
+        //    EventHandler.CallAfterSceneLoadedEvent();
+        //}
+
+        private void Start()
+        {
+            ISaveable saveable = this;
+            saveable.RegisterSaveable();
+
+            fadeCanvasGroup = FindObjectOfType<CanvasGroup>();          // 找到挂载了CanvasGroup的Object
+        }
+
+        private void OnStartNewGameEvent(int index)
+        {
+            StartCoroutine(LoadSaveDataScene(startSceneName));
         }
 
         private void OnTransitionEvent(string secneToGo, Vector3 positionToGo)

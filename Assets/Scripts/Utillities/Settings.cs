@@ -40,4 +40,8 @@ public class Settings
     public const float lightChangeDuration = 25f;       // 灯光切换时间
     public static TimeSpan morningTime  = new TimeSpan(5, 0, 0);
     public static TimeSpan nightTime    = new TimeSpan(19, 0, 0);
+
+    // 新游戏相关
+    public static Vector3 playerStartPos = new Vector3(0, -10f, 0);
+    public const int playerStartMoney = 100;
 }

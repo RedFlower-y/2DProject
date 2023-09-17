@@ -11,15 +11,17 @@ public class LightManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
-        EventHandler.LightShiftChangeEvent += OnLightShiftChangeEvent;
+        EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
+        EventHandler.LightShiftChangeEvent  += OnLightShiftChangeEvent;
+        EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
     }
 
     private void OnDisable()
     {
-        EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
-        EventHandler.LightShiftChangeEvent -= OnLightShiftChangeEvent;
-    }  
+        EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
+        EventHandler.LightShiftChangeEvent  -= OnLightShiftChangeEvent;
+        EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
+    }
 
     private void OnAfterSceneLoadedEvent()
     {
@@ -46,5 +48,9 @@ public class LightManager : MonoBehaviour
                 light.ChangeLightShift(currentSeason, currentLightShift, timeOfChangeLight);
             }
         }
+    }
+    private void OnStartNewGameEvent(int index)
+    {
+        currentLightShift = LightShift.Morning;
     }
 }

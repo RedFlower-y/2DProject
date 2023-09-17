@@ -19,17 +19,12 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
 
     public string GUID => GetComponent<DataGUID>().GUID;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        NewGameTime();
-    }
-
     private void OnEnable()
     {
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
         EventHandler.UpdateGameStateEvent   += OnUpdateGameStateEvent;
+        EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
     }
 
     private void OnDisable()
@@ -37,20 +32,23 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
         EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
+        EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
     }
+
 
     private void Start()
     {
         ISaveable saveable = this;
         saveable.RegisterSaveable();
+        gameClockPause = true;
 
-        // 为什么写在Start里面 而不写在NewGameTIme()里面？
-        // 因为EventHandler.CallGameDateEvent()和EventHandler.CallGameMinuteEvent()事件注册是在awake之后执行，而Start是在事件注册之后执行
-        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
-        EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
+        //// 为什么写在Start里面 而不写在NewGameTIme()里面？
+        //// 因为EventHandler.CallGameDateEvent()和EventHandler.CallGameMinuteEvent()事件注册是在awake之后执行，而Start是在事件注册之后执行
+        //EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear, gameSeason);
+        //EventHandler.CallGameMinuteEvent(gameMinute, gameHour, gameDay, gameSeason);
 
-        // 游戏开始就切换灯光
-        EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
+        //// 游戏开始就切换灯光
+        //EventHandler.CallLightShiftChangeEvent(gameSeason, GetCurrentLightShift(), timeDifference);
     }
 
     private void Update()
@@ -97,6 +95,12 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
     private void OnUpdateGameStateEvent(GameState gameState)
     {
         gameClockPause = gameState == GameState.GamePause;          // 开头Timeline过程中停止时间计数
+    }
+
+    private void OnStartNewGameEvent(int obj)
+    {
+        NewGameTime();
+        gameClockPause = false;
     }
 
     private void NewGameTime()

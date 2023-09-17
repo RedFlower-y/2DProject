@@ -29,6 +29,7 @@ namespace MFarm.Inventory
             EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
             EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
             EventHandler.BuildFurnitureEvent    += OnBuildFurnitureEvent;       // 建造
+            EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
         }
 
         private void OnDisable()
@@ -38,6 +39,7 @@ namespace MFarm.Inventory
             EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
             EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
             EventHandler.BuildFurnitureEvent    -= OnBuildFurnitureEvent;       // 建造
+            EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
         }
 
         private void Start()
@@ -105,6 +107,12 @@ namespace MFarm.Inventory
                 buildItem.GetComponent<Box>().index = InventoryManager.Instance.BoxDataAmount;
                 buildItem.GetComponent<Box>().InitBox(buildItem.GetComponent<Box>().index);
             }
+        }
+
+        private void OnStartNewGameEvent(int index)
+        {
+            sceneItemDict.Clear();
+            sceneFurnitureDict.Clear();
         }
 
         /// <summary>
