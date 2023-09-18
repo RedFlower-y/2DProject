@@ -7,7 +7,7 @@ public class LightManager : MonoBehaviour
     private LightControl[]  sceneLights;
     private LightShift      currentLightShift;
     private Season          currentSeason;
-    private float           timeOfChangeLight;
+    private float timeOfChangeLight = Settings.lightChangeDuration;
 
     private void OnEnable()
     {

@@ -45,6 +45,9 @@ public class NPCMovement : MonoBehaviour, ISaveable
     private bool isNPCmove;                 // 行为控制
     private bool isSceneLoaded;             // 是否加载完了场景
     public  bool interactable;              // 是否可互动 将ScheduleDetails中的interactable传进来
+    public  bool isFirstLoad;               // 是否是第一次加载这个NPC 存档相关
+
+    private Season currentSeason;
 
     // 动画计时器相关
     private float   animationBreakTime;
@@ -129,11 +132,21 @@ public class NPCMovement : MonoBehaviour, ISaveable
         }
 
         isSceneLoaded = true;
+
+        // 再次读取时 重新构建路径
+        if (!isFirstLoad)
+        {
+            currentGridPosition = grid.WorldToCell(transform.position);
+            var schedule = new ScheduleDetails(0, 0, 0, 0, currentSeason, targetScnene, (Vector2Int)targetGridPosition, stopAnimationClip, interactable);
+            BuildPath(schedule);
+            isFirstLoad = true;
+        }
     }
 
     private void OnGameMinuteEvent(int minute, int hour, int day, Season season)
     {
         int time = (hour * 100) + minute;
+        currentSeason = season;
 
         ScheduleDetails matchSchedule = null;
         foreach(var schedule in scheduleSet)
@@ -272,6 +285,7 @@ public class NPCMovement : MonoBehaviour, ISaveable
     {
         movementSteps.Clear();
         currentSchedule = scheduleDetails;
+        targetScnene = scheduleDetails.targetScene;
 
         // 动画相关
         targetGridPosition = (Vector3Int)scheduleDetails.targetGridPosition;
@@ -468,12 +482,17 @@ public class NPCMovement : MonoBehaviour, ISaveable
 
         saveData.interactable = this.interactable;
 
+        saveData.timeDict = new Dictionary<string, int>();
+        saveData.timeDict.Add("currentSeason", (int)currentSeason);
+
         return saveData;
     }
 
     public void RestoreData(GameSaveData saveData)
     {
         isInitialised = true;           // 读取存档时，人物是已经加载过的状态
+
+        isFirstLoad = false;            // 上一次储存时，NPC在移动，读取存档后，需要重新构建路径
 
         Vector3Int gridPos = (Vector3Int)saveData.characterPosDict["targetGridPosition"].ToVector2Int();
         targetGridPosition = gridPos;
@@ -491,5 +510,7 @@ public class NPCMovement : MonoBehaviour, ISaveable
         }
 
         this.interactable = saveData.interactable;
+
+        this.currentSeason = (Season)saveData.timeDict["currentSeason"];
     }
 }

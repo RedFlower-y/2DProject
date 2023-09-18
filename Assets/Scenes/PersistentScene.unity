@@ -853,6 +853,7 @@ MonoBehaviour:
   normalSpeed: 2
   isMoving: 0
   interactable: 0
+  isFirstLoad: 0
   blankAnimationClip: {fileID: 7400000, guid: 500fefed8113b4f7e8f2dc728631a63d, type: 2}
 --- !u!95 &129705302
 Animator:
@@ -3347,6 +3348,7 @@ MonoBehaviour:
   normalSpeed: 2
   isMoving: 0
   interactable: 0
+  isFirstLoad: 0
   blankAnimationClip: {fileID: 7400000, guid: 500fefed8113b4f7e8f2dc728631a63d, type: 2}
 --- !u!95 &1132789769
 Animator:
@@ -4527,6 +4529,7 @@ MonoBehaviour:
   normalSpeed: 2
   isMoving: 0
   interactable: 0
+  isFirstLoad: 0
   blankAnimationClip: {fileID: 7400000, guid: 500fefed8113b4f7e8f2dc728631a63d, type: 2}
 --- !u!95 &1585728155
 Animator:

@@ -391,6 +391,8 @@ namespace MFarm.Inventory
         public void RestoreData(GameSaveData saveData)
         {
             this.playerMoney = saveData.playerMoney;
+
+            playerBag = Instantiate(playerBagTemp);             // 只在OnStartNewGameEvent中初始化过，读取存档无法初始化，所以在读取存档时先创建空对象
             playerBag.itemList = saveData.inventoryDict[playerBag.name];
 
             foreach (var item in saveData.inventoryDict)
