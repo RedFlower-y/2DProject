@@ -296,4 +296,13 @@ public static class EventHandler
     {
         StartNewGameEvent?.Invoke(index);
     }
+
+    /// <summary>
+    /// ½áÊøÓÎÏ·
+    /// </summary>
+    public static event Action EndGameEvent;
+    public static void CallEndGameEvent()
+    {
+        EndGameEvent?.Invoke();
+    }
 }

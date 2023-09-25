@@ -40,6 +40,7 @@ public class NPCMovement : MonoBehaviour, ISaveable
     private Grid grid;
 
     private Stack<MovementStep> movementSteps;
+    private Coroutine npcMoveRoutine;
 
     private bool isInitialised;             // 确保只在第一次加载场景的时候初始化NPC移动   
     private bool isNPCmove;                 // 行为控制
@@ -84,6 +85,8 @@ public class NPCMovement : MonoBehaviour, ISaveable
         EventHandler.BeforeSceneUnloadEvent += OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
         EventHandler.GameMinuteEvent        += OnGameMinuteEvent;
+        EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
+        EventHandler.EndGameEvent           += OnEndGameEvent;
     }
 
     private void OnDisable()
@@ -91,6 +94,8 @@ public class NPCMovement : MonoBehaviour, ISaveable
         EventHandler.BeforeSceneUnloadEvent -= OnBeforeSceneUnloadEvent;
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
         EventHandler.GameMinuteEvent        -= OnGameMinuteEvent;
+        EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
+        EventHandler.EndGameEvent           -= OnEndGameEvent;
     }
 
     private void Start()
@@ -169,6 +174,19 @@ public class NPCMovement : MonoBehaviour, ISaveable
             BuildPath(matchSchedule);
     }
 
+    private void OnStartNewGameEvent(int index)
+    {
+        isInitialised = false;
+        isFirstLoad = true;
+    }
+
+    private void OnEndGameEvent()
+    {
+        isSceneLoaded = false;
+        isNPCmove = false;
+        if (npcMoveRoutine != null)
+            StopCoroutine(npcMoveRoutine);
+    }
 
     /// <summary>
     /// 判断当前场景NPC是否可视
@@ -229,7 +247,7 @@ public class NPCMovement : MonoBehaviour, ISaveable
     /// <param name="stepTime">时间戳</param>
     private void MoveToGridPosition(Vector3Int gridPos,TimeSpan stepTime)
     {
-        StartCoroutine(MoveRoutine(gridPos, stepTime));
+        npcMoveRoutine = StartCoroutine(MoveRoutine(gridPos, stepTime));
     }
 
     /// <summary>

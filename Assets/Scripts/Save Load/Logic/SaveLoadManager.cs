@@ -25,13 +25,15 @@ namespace MFarm.Save
 
         private void OnEnable()
         {
-            EventHandler.StartNewGameEvent += OnStartNewGameEvent;
+            EventHandler.StartNewGameEvent  += OnStartNewGameEvent;
+            EventHandler.EndGameEvent       += OnEndGameEvent;
         }
 
         private void OnDisable()
         {
-            EventHandler.StartNewGameEvent -= OnStartNewGameEvent;
-        }
+            EventHandler.StartNewGameEvent  -= OnStartNewGameEvent;
+            EventHandler.EndGameEvent       -= OnEndGameEvent;
+        }        
 
         private void Update()
         {
@@ -44,6 +46,11 @@ namespace MFarm.Save
         private void OnStartNewGameEvent(int index)
         {
             currentDataIndex = index;
+        }
+
+        private void OnEndGameEvent()
+        {
+            Save(currentDataIndex);
         }
 
         public void RegisterSaveable(ISaveable saveable)

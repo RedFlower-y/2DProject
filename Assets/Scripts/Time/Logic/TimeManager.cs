@@ -25,6 +25,7 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
         EventHandler.AfterSceneLoadedEvent  += OnAfterSceneLoadedEvent;
         EventHandler.UpdateGameStateEvent   += OnUpdateGameStateEvent;
         EventHandler.StartNewGameEvent      += OnStartNewGameEvent;
+        EventHandler.EndGameEvent           += OnEndGameEvent;
     }
 
     private void OnDisable()
@@ -33,6 +34,7 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
         EventHandler.AfterSceneLoadedEvent  -= OnAfterSceneLoadedEvent;
         EventHandler.UpdateGameStateEvent   -= OnUpdateGameStateEvent;
         EventHandler.StartNewGameEvent      -= OnStartNewGameEvent;
+        EventHandler.EndGameEvent           -= OnEndGameEvent;
     }
 
 
@@ -101,6 +103,11 @@ public class TimeManager : Singloten<TimeManager>, ISaveable
     {
         NewGameTime();
         gameClockPause = false;
+    }
+
+    private void OnEndGameEvent()
+    {
+        gameClockPause = true;
     }
 
     private void NewGameTime()

@@ -26,12 +26,14 @@ namespace MFarm.Transition
         {
             EventHandler.TransitionEvent    += OnTransitionEvent;
             EventHandler.StartNewGameEvent  += OnStartNewGameEvent;
+            EventHandler.EndGameEvent       += OnEndGameEvent;
         }
 
         private void OnDisable()
         {
             EventHandler.TransitionEvent    -= OnTransitionEvent;
             EventHandler.StartNewGameEvent  -= OnStartNewGameEvent;
+            EventHandler.EndGameEvent       -= OnEndGameEvent;
         }
 
         ///// <summary>
@@ -55,6 +57,11 @@ namespace MFarm.Transition
             saveable.RegisterSaveable();
 
             fadeCanvasGroup = FindObjectOfType<CanvasGroup>();          // ’“µΩπ“‘ÿ¡ÀCanvasGroupµƒObject
+        }
+
+        private void OnEndGameEvent()
+        {
+            StartCoroutine(UnloadScene());
         }
 
         private void OnStartNewGameEvent(int index)
@@ -103,6 +110,14 @@ namespace MFarm.Transition
             Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
 
             SceneManager.SetActiveScene(newScene);
+        }
+
+        private IEnumerator UnloadScene()
+        {
+            EventHandler.CallBeforeSceneUnloadEvent();
+            yield return Fade(1f);
+            yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            yield return Fade(0);
         }
 
         /// <summary>
