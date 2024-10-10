@@ -10,6 +10,5 @@
 # Unity版本
 2021.3.25f1
 
-# 游戏游玩demo
-链接：https://pan.baidu.com/s/193BJaOiijHxpsl-2QjZzbg?pwd=puit 
-提取码：puit 
+# 游戏游玩demo & 视频
+发布页
